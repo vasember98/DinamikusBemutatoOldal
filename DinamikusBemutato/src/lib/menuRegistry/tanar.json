@@ -1,0 +1,8 @@
+{
+    "$schema": "../jsonSchemas/menu.schema.json",
+    "menu": [
+        ["/tanar/diak-adatok", "diák adatok"],
+        ["/tanar/kviz-indito", "kvíz indító"],
+        [null, "Diákok", []]
+            ]
+}

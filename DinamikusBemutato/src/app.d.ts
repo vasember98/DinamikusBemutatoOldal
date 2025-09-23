@@ -13,3 +13,12 @@ declare global {
 
 // interface Platform {}
 export {};
+
+declare global {
+  namespace App {
+    interface PageData {
+      user: App.Locals['user'];
+    }
+  }
+}
+export {};

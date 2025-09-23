@@ -1,0 +1,19 @@
+{
+    "$schema": "../jsonSchemas/menu.schema.json",
+    "menu": [
+        ["/", "Main page"],
+        [null, "Main section", [
+            ["/alma", "alma"],
+            ["/banan", "banan"]
+        ]],
+        ["/another", "Another main section", [
+            ["/another/citrom", "citrom"],
+            [null, "datolya", [
+                ["/another/datolya/eper", "eper"],
+                ["/another/datolya/fahej", "fahéj"]
+            ]],
+            ["/another/galagonya", "galagonya"]
+        ]]
+            ]
+
+}

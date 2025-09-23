@@ -1,0 +1,9 @@
+{
+    "$schema": "../jsonSchemas/menu.schema.json",
+    "menu": [
+        ["/admin/felhasznalok", "felhasználók"],
+        ["/admin/szerepek", "szerepkörök"],
+        ["/admin/jelentesek", "jelentések"]
+            ]
+
+}

@@ -6,7 +6,7 @@
             ["/alma", "alma"],
             ["/banan", "banan"]
         ]],
-        ["/another", "Another main section", [
+        ["/missions", "Missions", [
             ["/another/citrom", "citrom"],
             [null, "datolya", [
                 ["/another/datolya/eper", "eper"],

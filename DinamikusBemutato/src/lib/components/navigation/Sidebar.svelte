@@ -1,15 +1,15 @@
-<!-- src/lib/components/Sidebar.svelte -->
 <script lang="ts">
   import { page } from '$app/state';
-  import { computeActiveSets } from '$lib/stores/activeRoute';
-  import type { SidebarNode } from '$lib/types/sidebar';
-  import SidebarItem from '$lib/components/navigation/SidebarItem.svelte';
   import { expanded } from '$lib/stores/collapse';
   import { menuNodes } from '$lib/stores/menus';
+  import { computeActiveSets } from '$lib/stores/activeRoute';
+  import SidebarItem from './SidebarItem.svelte';
+  import type { SidebarNode } from '$lib/types/sidebar';
 
-  export let nodes: SidebarNode[] | null = null;
+  let { nodes = null } = $props<{ nodes?: SidebarNode[] | null }>();
 
-  $: renderNodes = nodes ?? $menuNodes;
+  // ✅ derived values
+  let renderNodes = $derived(nodes ?? $menuNodes);
 
   function collectCollapsibleIds(list: SidebarNode[] | undefined, acc: Set<string>) {
     if (!list) return;
@@ -21,32 +21,36 @@
     }
   }
 
-  $: allCollapsibleIds = (() => {
-    const s = new Set<string>();
-    collectCollapsibleIds(renderNodes, s);
-    return [...s];
-  })();
+  function getAllCollapsibleIds(list?: SidebarNode[]): string[] {
+  const s = new Set<string>();
+  collectCollapsibleIds(list, s);
+  return [...s];
+}
+
+let allCollapsibleIds = $derived(getAllCollapsibleIds(renderNodes));
 
   const expandAll = () => expanded.setMany(allCollapsibleIds, true);
   const collapseAll = () => expanded.setMany(allCollapsibleIds, false);
 
-  $: {
+  // ✅ side-effect: runs when renderNodes or page.url change
+  $effect(() => {
     const { ancestors } = computeActiveSets(renderNodes ?? [], page.url);
-    const targetToOpen = allCollapsibleIds.filter((id) => ancestors.has(id));
+    const toOpen = allCollapsibleIds.filter((id) => ancestors.has(id));
     expanded.setMany(allCollapsibleIds, false);
-    if (targetToOpen.length) expanded.setMany(targetToOpen, true);
-  }
+    if (toOpen.length) expanded.setMany(toOpen, true);
+  });
 </script>
+
 
 <!-- PURE CONTENT: no fixed/sticky/z/translate here -->
 <div class="w-full p-3">
   <div class="mb-3 flex items-center gap-2">
     <button class="rounded-md px-2 py-1 text-xs hover:bg-neutral-100 dark:hover:bg-neutral-800 focus:outline-none focus:ring-2"
-            on:click={expandAll} aria-label="Expand all">
+            onclick={expandAll} aria-label="Expand all">
       Expand all
     </button>
     <button class="rounded-md px-2 py-1 text-xs hover:bg-neutral-100 dark:hover:bg-neutral-800 focus:outline-none focus:ring-2"
-            on:click={collapseAll} aria-label="Collapse all">
+            onclick={collapseAll} aria-label="Collapse all">
       Collapse all
     </button>
   </div>

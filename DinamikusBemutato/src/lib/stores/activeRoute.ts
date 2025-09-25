@@ -3,16 +3,13 @@ import type { SidebarNode } from '$lib/types/sidebar';
 
 const strip = (p: string) => (p !== '/' && p.endsWith('/') ? p.slice(0, -1) : p);
 
-export function matchHref(href: string | undefined, url: URL): 'exact' | 'ancestor' | 'none' {
-  if (!href) return 'none';
-  if (href.startsWith('#')) return url.hash === href ? 'exact' : 'none';
-  if (/^https?:\/\//i.test(href)) return href === url.href ? 'exact' : 'none';
-
-  const target = new URL(href, url);
-  const a = strip(target.pathname);
-  const b = strip(url.pathname);
-  if (a === b) return 'exact';
-  return a !== '/' && b.startsWith(a + '/') ? 'ancestor' : 'none';
+export function matchHref(href: string | undefined, url: URL) {
+  if (!href) return 'none' as const;
+  const cur = url.pathname.replace(/\/+$/, '');
+  const target = new URL(href, url).pathname.replace(/\/+$/, '');
+  if (cur === target) return 'exact' as const;
+  if (cur.startsWith(target + '/')) return 'ancestor' as const;
+  return 'none' as const;
 }
 
 export function computeActiveSets(nodes: SidebarNode[], url: URL) {

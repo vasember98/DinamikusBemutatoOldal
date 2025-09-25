@@ -2,7 +2,7 @@
   import { page } from '$app/state';
   import { Menu, House, Bell, User as UserIcon } from 'lucide-svelte';
   import { sidebarVisible, toggleSidebar } from '$lib/stores/ui';
-  $: user = page.data.user;
+   let user = $derived(page.data.user);
 </script>
 
 <!-- Force in-flow layout -->
@@ -13,7 +13,7 @@
   aria-label="Toggle menu"
   aria-controls="app-sidebar"
   aria-expanded={$sidebarVisible}
-  on:click={() => sidebarVisible.update(v => !v)}
+  onclick={() => sidebarVisible.update(v => !v)}
   class="inline-flex h-9 w-9 items-center justify-center rounded-lg border hover:bg-gray-50 focus:outline-none focus:ring"
 >
   <Menu size={20} />

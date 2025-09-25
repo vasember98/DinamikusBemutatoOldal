@@ -1,63 +1,43 @@
 <script lang="ts">
   import type { SidebarNode } from '$lib/types/sidebar';
+  import { page } from '$app/state';
   import { expanded } from '$lib/stores/collapse';
-  import { page } from '$app/state';     
-  import { matchHref } from '$lib/stores/activeRoute';
-  import { onMount } from 'svelte';
 
-  export let item: SidebarNode;
-  
-  // Derived flags
+  let { item } = $props<{ item: SidebarNode }>();
+
+  const norm = (p: string) => p.replace(/\/+$/, '') || '/';
+
+  // ✅ correct: let <name> = $derived(...)
+  let current  = $derived(norm(page.url.pathname));
+  let target   = $derived(item.href ? norm(new URL(item.href, page.url).pathname) : '');
+
+  let isClickable = $derived(!!item.href);
+  let isActive    = $derived(isClickable && current === target);
+  let isAncestor  = $derived(isClickable && target !== '/' && current.startsWith(target + '/'));
+
   const hasChildren = !!(item.children && item.children.length);
   const collapsible = (item as any).collapsible ?? hasChildren;
   const listId = `children-${item.id}`;
 
-  // Active/ancestor highlighting from current URL
-  $: match = matchHref(item.href, page.url);  
-  $: isActive = match === 'exact';
-  $: isAncestor = match === 'ancestor';
-
-  // Clickable = we have an href
-  $: isClickable = typeof item.href === 'string' && item.href.length > 0;
-
-  // Respect an optional initiallyExpanded the first time (before user toggles)
-  onMount(() => {
-    if (hasChildren && (item as any).initiallyExpanded) {
-      expanded.toggle(item.id, true);
+  function onKeydown(e: KeyboardEvent) {
+    if (e.key === 'ArrowRight' && hasChildren && !$expanded.has(item.id)) {
+      e.preventDefault(); expanded.toggle(item.id, true);
+    } else if (e.key === 'ArrowLeft' && hasChildren && $expanded.has(item.id)) {
+      e.preventDefault(); expanded.toggle(item.id, false);
     }
-  });
-
+  }
   const toggle = (e?: Event) => {
     e?.stopPropagation();
     expanded.toggle(item.id);
   };
-
-  // Minimal keyboard support on the row container:
-  // - ArrowRight: expand (if closed) or follow link (if leaf)
-  // - ArrowLeft: collapse (if open)
-  // - Enter/Space on non-link labels does nothing (keeps a11y clean)
-  function onKeydown(e: KeyboardEvent) {
-    if (e.key === 'ArrowRight') {
-      if (hasChildren && !$expanded.has(item.id)) {
-        e.preventDefault();
-        expanded.toggle(item.id, true);
-      } else if (!hasChildren && isClickable) {
-        // let the anchor handle navigation (no preventDefault)
-      }
-    } else if (e.key === 'ArrowLeft') {
-      if (hasChildren && $expanded.has(item.id)) {
-        e.preventDefault();
-        expanded.toggle(item.id, false);
-      }
-    }
-  }
 </script>
+
 
 <li class="group"
   role="treeitem"
   aria-expanded={hasChildren && collapsible ? $expanded.has(item.id) : undefined}
   aria-selected={isActive} 
-  on:keydown={onKeydown}
+  onkeydown={onKeydown}
   >
   <div
     class="flex items-center gap-2 rounded-lg px-2 py-1.5 outline-none"  >
@@ -70,7 +50,7 @@
         aria-label={`Toggle ${item.label}`}
         aria-controls={listId}
         aria-expanded={$expanded.has(item.id)}
-        on:click|stopPropagation={toggle}
+        onclick={toggle}
       >
         <svg
           class="h-4 w-4 transition-transform duration-200"

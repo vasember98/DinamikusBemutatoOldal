@@ -5,7 +5,7 @@
   import MobileSidebar from '$lib/components/navigation/MobileSidebar.svelte';
   import DesktopSidebar from '$lib/components/navigation/DesktopSidebar.svelte';
   import { sidebarVisible, sidebarWidth, useOverlaySidebar } from '$lib/stores/ui';
-  export let children: Snippet;
+  let { children } = $props<{ children: Snippet }>();
   const HEADER_H = 56; // keep in sync with TopNav row height
 </script>
 

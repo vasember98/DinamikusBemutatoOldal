@@ -1,6 +1,6 @@
 <script lang="ts">
   import type { Snippet } from 'svelte';
-  import Sidebar from '$lib/components/Sidebar.svelte';
+  import Sidebar from '$lib/components/navigation/Sidebar.svelte';
   import { menuNodes } from '$lib/stores/menus';
   export let children: Snippet;
 </script>

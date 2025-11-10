@@ -2,6 +2,7 @@
   import type { SidebarNode } from '$lib/types/sidebar';
   import { page } from '$app/state';
   import { expanded } from '$lib/stores/collapse';
+  import SidebarItem from './SidebarItem.svelte'
 
   let { item } = $props<{ item: SidebarNode }>();
 
@@ -101,7 +102,7 @@
       class="list-none m-0 ml-3 mt-1 space-y-1 border-l border-neutral-200 pl-3 dark:border-neutral-700"
     >
       {#each kids as child (child.id)}
-        <svelte:self item={child} />
+        <SidebarItem item={child} />
       {/each}
     </ul>
   {/if}

@@ -1,6 +1,6 @@
 <script lang="ts">
-  import NotificationShell from '$lib/components/notifications/NotificationShell.svelte';
-  import NotificationFilters from '$lib/components/notifications/NotificationFilters.svelte';
+  import NotificationShell from '$lib/components/notifications/NotificationsShell.svelte';
+  import NotificationFilters from '$lib/components/notifications/NotificationFilter.svelte';
   import NotificationItem from '$lib/components/notifications/NotificationItem.svelte';
 
   type NotificationType = 'system' | 'comment' | 'mention' | 'warning';

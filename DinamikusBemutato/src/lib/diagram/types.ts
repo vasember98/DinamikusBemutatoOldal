@@ -1,13 +1,7 @@
-// src/lib/diagram/types.ts
 export type NodeId = string;
-
 export type Behavior = 'zone' | 'draggable' | 'hybrid';
 export type Layout = 'vertical' | 'free';
-
-// reserved for hybrid/control nodes (future)
 export type SlotId = null | 'then' | 'else' | 'body';
-
-// --- (lightweight types for future-typed editor) ---
 
 export type TypeRef =
   | { kind: 'any' }
@@ -27,26 +21,21 @@ export type PortSpec = {
   arity: Arity;
 };
 
-// Keep this open-ended — we only need 'zone' now
 export type NodeKind =
-  | 'zone'
-  | 'input'
+  | 'input' | 'const'
+  | 'unary' | 'binary' | 'nary'
+  | 'if' | 'while' | 'lambda'
   | 'output'
-  | 'value'
-  | 'op'
-  | 'branch'
-  | 'loop'
-  | 'custom';
+  | 'zone';
 
-// Core persisted node record (normalized)
 export type NodeRecord = {
   id: NodeId;
   kind: NodeKind;
-  behavior: Behavior;      // 'zone' for ZoneNode
-  name?: string;
-  layout?: Layout;         // zones define this; others may ignore
-  slot?: SlotId | null;    // for future hybrid parents
+  behavior: Behavior;
+  parentId: NodeId | null;
+  slot: SlotId;
+  children: NodeId[];
+  layout?: Layout;
+  ports: { in: PortSpec[]; out: PortSpec[] };
+  meta?: Record<string, unknown>;
 };
-
-// Absolute coordinates for free layout
-export type XY = { x: number; y: number };

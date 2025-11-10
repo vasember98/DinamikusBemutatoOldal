@@ -6,14 +6,30 @@
             ["/demo", "lucia"],
             ["/dnd-demo", "drag and drop"]
         ]],
-        ["/missions", "Missions", [
-            ["/another/citrom", "citrom"],
-            [null, "datolya", [
-                ["/another/datolya/eper", "eper"],
-                ["/another/datolya/fahej", "fahéj"]
-            ]],
-            ["/another/galagonya", "galagonya"]
-        ]]
-            ]
+        [
+        "/tananyag",
+        "Tananyag",
+        [
+            ["/tananyag/moho-strategia", "Mohó stratégia"],
+            [
+            "/tananyag/dinamikus-programozas-alapok-es-strategia",
+            "Dinamikus programozás alapok és stratégia"
+            ],
+            ["/tananyag/kincs-utvonal-feladatok", "Kincs / útvonal feladatok"],
+            ["/tananyag/penzvaltas-problemak", "Pénzváltás problémák"],
+            [
+            "/tananyag/leghosszabb-kozos-reszsorozat",
+            "Leghosszabb közös részsorozat (LCS)"
+            ],
+            ["/tananyag/toronyepites-feladat", "Toronyépítés feladat"],
+            ["/tananyag/kemence-feladat", "Kemence feladat"],
+            ["/tananyag/tukorszo", "Tükörszó (palindrom beszúrás)"],
+            ["/tananyag/rud-darabolas-feladat", "Rúd darabolás feladat"],
+            ["/tananyag/hatizsak-feladat", "Hátizsák feladat"],
+            ["/tananyag/tovabbi-feladatok", "További feladatok"]
+        ]
+        ]
+    ]
+     
 
 }

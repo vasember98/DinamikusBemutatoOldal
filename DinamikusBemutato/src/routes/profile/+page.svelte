@@ -25,27 +25,20 @@
   });
 
   // Load profile on mount
-  $effect(async () => {
+  $effect(() => {
+  (async () => {
     try {
       const res = await fetch('/api/profile', { credentials: 'include' });
       if (!res.ok) throw new Error('Failed to load profile');
-
       const data = await res.json();
-      profile = {
-        ...profile,
-        username: data.username ?? '',
-        email: data.email ?? '',
-        full_name: data.full_name ?? '',
-        avatar_url: data.avatar_url ?? '',
-        bio: data.bio ?? ''
-      };
+      profile = { ...profile, ...data };
     } catch (e) {
-      error = e.message ?? 'Could not load profile';
+      error = e instanceof Error ? e.message : 'Could not load profile';
     } finally {
       loading = false;
     }
-  });
-
+  })();
+});
   function startEdit() {
     success = '';
     error = '';
@@ -87,7 +80,7 @@
       success = 'Profile updated successfully.';
       editing = false;
     } catch (e) {
-      error = e.message ?? 'Failed to save profile';
+        error = e instanceof Error ? e.message : String(e);
     } finally {
       saving = false;
     }
@@ -127,7 +120,7 @@
         confirm_password: ''
       };
     } catch (e) {
-      error = e.message ?? 'Failed to change password';
+      error = e instanceof Error ? e.message : String(e);
     }
   }
 
@@ -238,7 +231,7 @@
                 rows="4"
                 bind:value={profile.bio}
                 placeholder="Tell something short about yourself..."
-              />
+              ></textarea>
             </label>
           </div>
         {:else}

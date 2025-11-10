@@ -30,14 +30,19 @@ export async function validateSessionToken(token: string) {
 	const sessionId = encodeHexLowerCase(sha256(new TextEncoder().encode(token)));
 	const [result] = await db
 		.select({
-			// Adjust user table here to tweak returned data
-			user: { id: table.user.id, username: table.user.username },
+			user: {
+				id: table.user.id,
+				username: table.user.username,
+				email: table.user.email,
+				fullName: table.user.fullName,
+				avatarUrl: table.user.avatarUrl
+			},
 			session: table.session
-		})
+			})
 		.from(table.session)
 		.innerJoin(table.user, eq(table.session.userId, table.user.id))
 		.where(eq(table.session.id, sessionId));
-
+		
 	if (!result) {
 		return { session: null, user: null };
 	}

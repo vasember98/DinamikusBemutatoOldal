@@ -2,9 +2,18 @@ import { mysqlTable, serial, int, varchar, datetime } from 'drizzle-orm/mysql-co
 
 export const user = mysqlTable('user', {
 	id: varchar('id', { length: 255 }).primaryKey(),
+
 	age: int('age'),
+
 	username: varchar('username', { length: 32 }).notNull().unique(),
-	passwordHash: varchar('password_hash', { length: 255 }).notNull()
+
+	passwordHash: varchar('password_hash', { length: 255 }).notNull(),
+
+	email: varchar('email', { length: 255 }),
+
+	fullName: varchar('full_name', { length: 255 }),
+
+	avatarUrl: varchar('avatar_url', { length: 512 })
 });
 
 export const session = mysqlTable('session', {
@@ -16,5 +25,4 @@ export const session = mysqlTable('session', {
 });
 
 export type Session = typeof session.$inferSelect;
-
 export type User = typeof user.$inferSelect;

@@ -43,7 +43,7 @@
         "path": "/tananyag/kincs-utvonal-feladatok",
         "summary": "Rácsos pályán való mozgás jobbra/lefelé vagy több irányban, akadályok kezelése és a maximálisan begyűjthető kincsek kiszámítása dinamikus programozással.",
         "sources": [
-          { "file": "pdfs/DP.pdf", "fromSlide": 7, "toSlide": 21 }
+          { "file": "pdfs/DP.pdf", "fromSlide": 6, "toSlide": 21 }
         ],
         "prev": {
           "id": "dinamikus-programozas-alapok-es-strategia"

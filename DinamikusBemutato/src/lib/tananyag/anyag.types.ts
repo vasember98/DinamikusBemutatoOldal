@@ -1,4 +1,3 @@
-// src/lib/anyag/anyag.types.ts
 
 export type PrevNextRef = {
 	id: string; // 'tananyag' vagy chapter id

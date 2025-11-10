@@ -17,13 +17,12 @@
     <p>{data.chapter.summary}</p>
 
     {#each data.sources as src (src.file + '-' + src.fromSlide + '-' + src.toSlide)}
-    <PdfSection
-        file={`/${src.file}`}
+      <PdfSection
+        file={src.file}
         fromPage={src.fromSlide}
         toPage={src.toSlide}
         title={`${data.chapter.title} – ${src.file} (${src.fromSlide}–${src.toSlide}. dia)`}
-    />
+      />
     {/each}
-
   {/snippet}
 </TananyagPage>

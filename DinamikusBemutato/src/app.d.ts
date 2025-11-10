@@ -20,5 +20,14 @@ declare global {
       user: App.Locals['user'];
     }
   }
+   type DropDetail = { sourceId: string; targetId: string; pointer: { x: number; y: number } };
+
+  namespace svelteHTML {
+    interface HTMLAttributes<T> {
+      'on:drop'?: (e: CustomEvent<DropDetail>) => void;
+      'on:dragenter'?: (e: CustomEvent<any>) => void;
+      'on:dragleave'?: (e: CustomEvent<any>) => void;
+    }
+  }
 }
 export {};

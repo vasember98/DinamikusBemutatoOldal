@@ -164,12 +164,14 @@
         </div>
 
         <div
-          class="drop-target"
-          draggable={mapping[i] !== -1}
-          ondragstart={() => startDragFromRow(i)}
-          ondragend={endDrag}
-        >
-          <span class:placeholder={mapping[i] === -1}>
+            class="drop-target"
+            draggable={mapping[i] !== -1}
+            ondragstart={() => startDragFromRow(i)}
+            ondragend={endDrag}
+            role="button"
+            tabindex={mapping[i] !== -1 ? 0 : -1}
+            >
+  <span class:placeholder={mapping[i] === -1}>
             {displayRightLabel(i)}
           </span>
 

@@ -1,0 +1,180 @@
+{
+  "$schema": "../jsonSchemas/anyag.schema.json",
+  "tananyag": {
+    "basePath": "/tananyag",
+    "chapters": [
+      {
+        "id": "moho-strategia",
+        "title": "Mohó stratégia",
+        "path": "/tananyag/moho-strategia",
+        "summary": "Bevezetés a mohó algoritmusokba: lokálisan optimális döntések, pénzváltás példa és ellenpéldák, ahol a mohó stratégia már nem optimális.",
+        "sources": [
+          { "file": "pdfs/DP.pdf", "fromSlide": 2, "toSlide": 5 }
+        ],
+        "prev": {
+          "id": "tananyag",
+          "label": "Tananyag áttekintés"
+        },
+        "next": {
+          "id": "dinamikus-programozas-alapok-es-strategia"
+        }
+      },
+      {
+        "id": "dinamikus-programozas-alapok-es-strategia",
+        "title": "Dinamikus programozás alapok és stratégia",
+        "path": "/tananyag/dinamikus-programozas-alapok-es-strategia",
+        "summary": "Az optimális részstruktúra, átfedő részproblémák, alulról-felfelé történő táblázatkitöltés és az optimális megoldás visszafejtésének elvei.",
+        "sources": [
+          { "file": "pdfs/DP.pdf", "fromSlide": 22, "toSlide": 23 },
+          { "file": "pdfs/DP.pdf", "fromSlide": 37, "toSlide": 38 },
+          { "file": "pdfs/DP.pdf", "fromSlide": 62, "toSlide": 63 },
+          { "file": "pdfs/DP.pdf", "fromSlide": 73, "toSlide": 74 }
+        ],
+        "prev": {
+          "id": "moho-strategia"
+        },
+        "next": {
+          "id": "kincs-utvonal-feladatok"
+        }
+      },
+      {
+        "id": "kincs-utvonal-feladatok",
+        "title": "Kincs / útvonal feladatok",
+        "path": "/tananyag/kincs-utvonal-feladatok",
+        "summary": "Rácsos pályán való mozgás jobbra/lefelé vagy több irányban, akadályok kezelése és a maximálisan begyűjthető kincsek kiszámítása dinamikus programozással.",
+        "sources": [
+          { "file": "pdfs/DP.pdf", "fromSlide": 7, "toSlide": 21 }
+        ],
+        "prev": {
+          "id": "dinamikus-programozas-alapok-es-strategia"
+        },
+        "next": {
+          "id": "penzvaltas-problemak"
+        }
+      },
+      {
+        "id": "penzvaltas-problemak",
+        "title": "Pénzváltás problémák",
+        "path": "/tananyag/penzvaltas-problemak",
+        "summary": "Pénzváltási feladatok különböző nézőpontokból: kifizethető-e egy összeg, mely címletekkel, minimális bankjegyszámmal, illetve hogyan kapcsolódnak ezek a részhalmaz- és osztozkodás problémákhoz.",
+        "sources": [
+          { "file": "pdfs/DP.pdf", "fromSlide": 24, "toSlide": 36 },
+          { "file": "pdfs/DP.pdf", "fromSlide": 75, "toSlide": 81 },
+          { "file": "pdfs/DP.pdf", "fromSlide": 82, "toSlide": 85 }
+        ],
+        "prev": {
+          "id": "kincs-utvonal-feladatok"
+        },
+        "next": {
+          "id": "leghosszabb-kozos-reszsorozat"
+        }
+      },
+      {
+        "id": "leghosszabb-kozos-reszsorozat",
+        "title": "Leghosszabb közös részsorozat (LCS)",
+        "path": "/tananyag/leghosszabb-kozos-reszsorozat",
+        "summary": "Két sorozat leghosszabb közös részsorozatának meghatározása, rekurzív felírással, majd memózással és táblázatos megoldással.",
+        "sources": [
+          { "file": "pdfs/DP.pdf", "fromSlide": 39, "toSlide": 45 }
+        ],
+        "prev": {
+          "id": "penzvaltas-problemak"
+        },
+        "next": {
+          "id": "toronyepites-feladat"
+        }
+      },
+      {
+        "id": "toronyepites-feladat",
+        "title": "Toronyépítés feladat",
+        "path": "/tananyag/toronyepites-feladat",
+        "summary": "Súly és méret szerint rendezett kockákból stabil torony építése. Minden kockára kiszámoljuk a maximális toronymagasságot, és visszafejtjük az optimális sorrendet.",
+        "sources": [
+          { "file": "pdfs/DP.pdf", "fromSlide": 46, "toSlide": 53 }
+        ],
+        "prev": {
+          "id": "leghosszabb-kozos-reszsorozat"
+        },
+        "next": {
+          "id": "kemence-feladat"
+        }
+      },
+      {
+        "id": "kemence-feladat",
+        "title": "Kemence feladat",
+        "path": "/tananyag/kemence-feladat",
+        "summary": "Batch-ekben égetett kerámia tárgyak optimális beosztása. Először darabszám-korláttal, majd összsúly-korláttal számoljuk ki a minimális teljes égetési időt.",
+        "sources": [
+          { "file": "pdfs/DP.pdf", "fromSlide": 54, "toSlide": 61 }
+        ],
+        "prev": {
+          "id": "toronyepites-feladat"
+        },
+        "next": {
+          "id": "tukorszo"
+        }
+      },
+      {
+        "id": "tukorszo",
+        "title": "Tükörszó (palindrom beszúrás)",
+        "path": "/tananyag/tukorszo",
+        "summary": "Minimális beszúrás egy szó palindrommá alakításához. Intervallum alapú dinamikus programozás M(i,j) táblával és megoldásrekonstrukcióval.",
+        "sources": [
+          { "file": "pdfs/DP.pdf", "fromSlide": 64, "toSlide": 69 }
+        ],
+        "prev": {
+          "id": "kemence-feladat"
+        },
+        "next": {
+          "id": "rud-darabolas-feladat"
+        }
+      },
+      {
+        "id": "rud-darabolas-feladat",
+        "title": "Rúd darabolás feladat",
+        "path": "/tananyag/rud-darabolas-feladat",
+        "summary": "Fémrúd optimális felvágása adott vágáspontoknál, ahol minden vágás költsége az aktuális darab hossza. Opt(i,j) táblával keressük a minimális összköltséget.",
+        "sources": [
+          { "file": "pdfs/DP.pdf", "fromSlide": 70, "toSlide": 72 }
+        ],
+        "prev": {
+          "id": "tukorszo"
+        },
+        "next": {
+          "id": "hatizsak-feladat"
+        }
+      },
+      {
+        "id": "hatizsak-feladat",
+        "title": "Hátizsák feladat",
+        "path": "/tananyag/hatizsak-feladat",
+        "summary": "A klasszikus 0/1 hátizsák feladat: adott kapacitás mellett a tárgyak egy részhalmazát választjuk úgy, hogy az összérték maximális legyen.",
+        "sources": [
+          { "file": "pdfs/DP.pdf", "fromSlide": 91, "toSlide": 95 }
+        ],
+        "prev": {
+          "id": "rud-darabolas-feladat"
+        },
+        "next": {
+          "id": "tovabbi-feladatok"
+        }
+      },
+      {
+        "id": "tovabbi-feladatok",
+        "title": "További feladatok",
+        "path": "/tananyag/tovabbi-feladatok",
+        "summary": "Extra dinamikus programozásos feladatötletek: DNS szekvencia, intervallum-lefedés, képátló optimalizálás, kétkamionos csomagfelpakolás, többkamionos pakolás.",
+        "sources": [
+          { "file": "pdfs/DP.pdf", "fromSlide": 98, "toSlide": 102 }
+        ],
+        "prev": {
+          "id": "hatizsak-feladat"
+        },
+        "next": {
+          "id": "tananyag",
+          "label": "Vissza a tananyag áttekintésre"
+        }
+      }
+    ]
+  }
+}

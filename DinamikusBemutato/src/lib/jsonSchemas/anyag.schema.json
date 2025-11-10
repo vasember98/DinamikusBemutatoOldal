@@ -1,0 +1,120 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://example.com/anyag.schema.json",
+  "title": "TananyagContentMap",
+  "type": "object",
+  "properties": {
+    "$schema": {
+      "type": "string",
+      "description": "Opciós hivatkozás a sémára (editor support)."
+    },
+    "tananyag": {
+      "type": "object",
+      "description": "A dinamikus programozás tananyag gyökérobjektuma.",
+      "properties": {
+        "basePath": {
+          "type": "string",
+          "description": "A tananyag gyökér útvonala (pl. /tananyag).",
+          "pattern": "^\\/"
+        },
+        "chapters": {
+          "type": "array",
+          "description": "Tananyag fejezetek listája.",
+          "items": {
+            "$ref": "#/definitions/Chapter"
+          },
+          "minItems": 1
+        }
+      },
+      "required": ["basePath", "chapters"],
+      "additionalProperties": false
+    }
+  },
+  "required": ["tananyag"],
+  "additionalProperties": false,
+  "definitions": {
+    "Chapter": {
+      "type": "object",
+      "description": "Egy fejezet/meta-egység a tananyagban.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "A fejezet egyedi azonosítója (slug).",
+          "pattern": "^[a-z0-9-]+$"
+        },
+        "title": {
+          "type": "string",
+          "description": "A fejezet címe."
+        },
+        "path": {
+          "type": "string",
+          "description": "A fejezethez tartozó route útvonal.",
+          "pattern": "^\\/"
+        },
+        "summary": {
+          "type": "string",
+          "description": "Rövid leírás arról, miről szól a fejezet."
+        },
+        "sources": {
+          "type": "array",
+          "description": "A fejezethez tartozó eredeti forrás (PDF) szakaszok.",
+          "items": {
+            "$ref": "#/definitions/Source"
+          },
+          "minItems": 1
+        },
+        "prev": {
+          "$ref": "#/definitions/PrevNextRef",
+          "description": "Előző logikai fejezet hivatkozás (vagy tananyag áttekintés).",
+          "default": null
+        },
+        "next": {
+          "$ref": "#/definitions/PrevNextRef",
+          "description": "Következő logikai fejezet hivatkozás (vagy tananyag áttekintés).",
+          "default": null
+        }
+      },
+      "required": ["id", "title", "path", "summary", "sources"],
+      "additionalProperties": false
+    },
+    "Source": {
+      "type": "object",
+      "description": "Kapcsolat egy konkrét PDF és diá(i) között.",
+      "properties": {
+        "file": {
+          "type": "string",
+          "description": "A forrás PDF fájl neve."
+        },
+        "fromSlide": {
+          "type": "integer",
+          "description": "Kezdő dia sorszáma (inkluzív).",
+          "minimum": 1
+        },
+        "toSlide": {
+          "type": "integer",
+          "description": "Záró dia sorszáma (inkluzív).",
+          "minimum": 1
+        }
+      },
+      "required": ["file", "fromSlide", "toSlide"],
+      "additionalProperties": false
+    },
+    "PrevNextRef": {
+      "type": "object",
+      "description": "Navigációs hivatkozás egy másik fejezetre vagy a tananyag áttekintésre.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Cél fejezet id-je, vagy 'tananyag' az áttekintő oldalhoz.",
+          "pattern": "^(tananyag|[a-z0-9-]+)$"
+        },
+        "label": {
+          "type": "string",
+          "description": "A megjelenítendő felirat. Ha nincs megadva, a cél fejezet címe használható."
+        }
+      },
+      "required": ["id"],
+      "additionalProperties": false
+    }
+  }
+}

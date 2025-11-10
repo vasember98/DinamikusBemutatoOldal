@@ -1,5 +1,8 @@
 {
   "dependencies": {
     "mysql2": "^3.15.0"
+  },
+  "devDependencies": {
+    "@sveltejs/adapter-node": "^5.4.0"
   }
 }

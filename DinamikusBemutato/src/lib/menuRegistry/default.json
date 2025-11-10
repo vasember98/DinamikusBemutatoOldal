@@ -3,7 +3,6 @@
     "menu": [
         ["/", "Main page"],
         [null, "demos", [
-            ["/demo", "lucia"],
             ["/dnd-demo", "drag and drop"]
         ]],
         [

@@ -4,6 +4,7 @@ import { sha256 } from '@oslojs/crypto/sha2';
 import { encodeBase64url, encodeHexLowerCase } from '@oslojs/encoding';
 import { db } from '$lib/server/db';
 import * as table from '$lib/server/db/schema';
+import { verifyPassword } from '$lib/server/password';
 
 const DAY_IN_MS = 1000 * 60 * 60 * 24;
 
@@ -72,15 +73,43 @@ export async function invalidateSession(sessionId: string) {
 	await db.delete(table.session).where(eq(table.session.id, sessionId));
 }
 
-export function setSessionTokenCookie(event: RequestEvent, token: string, expiresAt: Date) {
+export function setSessionTokenCookie(
+	event: Pick<RequestEvent, 'cookies'>,
+	token: string,
+	expiresAt: Date
+) {
 	event.cookies.set(sessionCookieName, token, {
 		expires: expiresAt,
 		path: '/'
 	});
 }
 
-export function deleteSessionTokenCookie(event: RequestEvent) {
+export function deleteSessionTokenCookie(event: Pick<RequestEvent, 'cookies'>) {
 	event.cookies.delete(sessionCookieName, {
 		path: '/'
 	});
+}
+
+export async function verifyUser(username: string, password: string) {
+	const [user] = await db
+		.select()
+		.from(table.user)
+		.where(eq(table.user.username, username));
+
+	if (!user || !user.passwordHash) {
+		return null;
+	}
+
+	const ok = await verifyPassword(password, user.passwordHash);
+	if (!ok) {
+		return null;
+	}
+
+	return {
+		id: user.id,
+		username: user.username,
+		email: user.email,
+		fullName: user.fullName,
+		avatarUrl: user.avatarUrl
+	};
 }

@@ -1,7 +1,6 @@
-<!-- src/lib/components/PdfSection.svelte -->
 <script lang="ts">
   type Props = {
-    file: string;       // pl. "pdfs/DP-1.pdf"  (anyagBontasból)
+    file: string;       
     fromPage: number;
     toPage: number;
     title?: string;
@@ -14,7 +13,6 @@
     title = `PDF részlet: ${file} (${fromPage}–${toPage}. oldal)`
   }: Props = $props();
 
-  // ha file nem /-rel kezdődik, tegyünk elé egyet
   const src = file.startsWith('/')
     ? `${file}#page=${fromPage}`
     : `/${file}#page=${fromPage}`;

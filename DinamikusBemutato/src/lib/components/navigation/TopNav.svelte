@@ -24,24 +24,27 @@
         <House size={20} />
       </a>
     </div>
-
+    
+    
+    
     <div class="flex items-center gap-3">
+      {#if user}
       <a href="/notifications" aria-label="Notifications"
          class="inline-flex h-9 w-9 items-center justify-center rounded-lg border hover:bg-gray-50">
         <Bell size={20} />
       </a>
 
-      <a href="/profile" aria-label="Profile"
-         class="inline-flex h-9 w-9 items-center justify-center rounded-full border hover:bg-gray-50">
-        <UserIcon size={20} />
-      </a>
+        <a href="/profile" aria-label="Profile"
+          class="inline-flex h-9 w-9 items-center justify-center rounded-full border hover:bg-gray-50">
+          <UserIcon size={20} />
+        </a>
 
-      {#if user}
         <a href="/account" class="rounded-xl border px-3 py-1.5 text-sm font-medium hover:bg-gray-50">
           {user.username}
         </a>
       {:else}
-        <a href="/demo/lucia/login" class="rounded-xl border px-3 py-1.5 text-sm font-medium hover:bg-gray-50">
+        
+        <a href="/account" class="rounded-xl border px-3 py-1.5 text-sm font-medium hover:bg-gray-50">
           Log in
         </a>
       {/if}

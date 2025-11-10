@@ -1,0 +1,671 @@
+{
+  "$schema": "../jsonSchemas/questions.schema.json", 
+  "version": "1.0",
+  "source": "DP.pdf + DP_orai.pdf",
+  "language": "hu",
+  "questions": [
+    {
+      "id": "DP-1",
+      "topic": "strategia",
+      "type": "true_false",
+      "prompt": "A dinamikus programozás egyik alapelve, hogy a részproblémák megoldásait eltároljuk, és újra felhasználjuk.",
+      "answer": true,
+      "explanation": "A tárolt részprobléma-eredmények (memorizálás / táblázatkitöltés) adják a módszer lényegét.",
+      "difficulty": "easy"
+    },
+    {
+      "id": "DP-2",
+      "topic": "strategia",
+      "type": "true_false",
+      "prompt": "Dinamikus programozásnál a részproblémák közti függés tartalmazhat ciklusokat is, ha az optimális.",
+      "answer": false,
+      "explanation": "A függésnek körmentesnek kell lennie, különben nem tudjuk jól alulról-felfelé számolni.",
+      "difficulty": "medium"
+    },
+    {
+      "id": "DP-3",
+      "topic": "strategia",
+      "type": "multiple_choice",
+      "prompt": "Válaszd ki az ÖSSZES igaz állítást a dinamikus programozás stratégiájáról!",
+      "options": [
+        { "id": 1, "text": "Az optimális megoldás szerkezetének vizsgálatával kezdünk." },
+        { "id": 2, "text": "A részproblémák megoldásait sosem tároljuk, mindig újraszámoljuk." },
+        { "id": 3, "text": "A részproblémák megoldását gyakran táblázatban számoljuk ki alulról-felfelé." },
+        { "id": 4, "text": "A módszer csak gráfos feladatokra alkalmazható." }
+      ],
+      "answer": [1, 3],
+      "explanation": "1 és 3 a jegyzetben megadott stratégia részei; 2 hamis (pont tárolunk), 4 túl szűk.",
+      "difficulty": "easy"
+    },
+    {
+      "id": "LCS-1",
+      "topic": "LCS",
+      "type": "single_choice",
+      "prompt": "Mit jelent L(i,j) a leghosszabb közös részsorozat feladatnál?",
+      "options": [
+        { "id": 1, "text": "Az X és Y teljes sorozatainak LCS hossza." },
+        { "id": 2, "text": "Az X első i és Y első j eleméből képezhető LCS hossza." },
+        { "id": 3, "text": "Az X i..n és Y j..m részének LCS hossza." },
+        { "id": 4, "text": "A rossz részprobléma-definíció, ilyet nem használunk." }
+      ],
+      "answer": 2,
+      "explanation": "A jegyzet szerint L(i,j) az X prefix(i) és Y prefix(j) LCS-ének hossza.",
+      "difficulty": "easy"
+    },
+    {
+      "id": "LCS-2",
+      "topic": "LCS",
+      "type": "multiple_choice",
+      "prompt": "Válaszd ki az ÖSSZES igaz rekurziós összefüggést az LCS feladatnál!",
+      "options": [
+        { "id": 1, "text": "Ha i=0 vagy j=0, akkor L(i,j)=0." },
+        { "id": 2, "text": "Ha X(i)=Y(j), akkor L(i,j)=L(i-1,j-1)+1." },
+        { "id": 3, "text": "Ha X(i)≠Y(j), akkor L(i,j)=max(L(i-1,j),L(i,j-1))." },
+        { "id": 4, "text": "Ha X(i)≠Y(j), akkor L(i,j)=L(i-1,j-1)." }
+      ],
+      "answer": [1, 2, 3],
+      "explanation": "A 4. állítás hibás, pont ez különbözteti meg az eseteket.",
+      "difficulty": "medium"
+    },
+    {
+      "id": "LCS-3",
+      "topic": "LCS",
+      "type": "true_false",
+      "prompt": "A memorizálásos rekurzív LCS megoldás ugyanazokat az értékeket újra meg újra kiszámolja.",
+      "answer": false,
+      "explanation": "A memorizálás lényege, hogy amit kiszámoltunk, azt eltároljuk, és nem számoljuk újra.",
+      "difficulty": "easy"
+    },
+    {
+      "id": "TOWER-1",
+      "topic": "toronyepites",
+      "type": "single_choice",
+      "prompt": "Milyen feltételnek kell teljesülnie a stabil toronyban a kockákra?",
+      "options": [
+        { "id": 1, "text": "Felfelé haladva a méret és súly nem nőhet, csak csökkenhet." },
+        { "id": 2, "text": "Felfelé haladva a méret nő, a súly tetszőleges." },
+        { "id": 3, "text": "Csak a legkisebb kocka lehet legalul." },
+        { "id": 4, "text": "Nincs semmilyen korlát, csak az elemszám számít." }
+      ],
+      "answer": 1,
+      "explanation": "A feladat szerint stabil toronyban felfelé csökken mindkettő.",
+      "difficulty": "easy"
+    },
+    {
+      "id": "TOWER-2",
+      "topic": "toronyepites",
+      "type": "true_false",
+      "prompt": "A Toronyépítés DP megoldásban Kocka(i) az a maximális magasság, amely az i-edik kockával a torony tetején érhető el.",
+      "answer": true,
+      "explanation": "Pont így definiáljuk: részprobléma = i a tetején.",
+      "difficulty": "medium"
+    },
+    {
+      "id": "KEMENCE-1",
+      "topic": "kemence",
+      "type": "match_pairs",
+      "prompt": "Párosítsd a kemence feladatban használt jelöléseket a jelentésükkel!",
+      "pairs": {
+        "left": [
+          "Idő(i)",
+          "Db(i)",
+          "Kivel(i)",
+          "Éget(i)"
+        ],
+        "right": [
+          "Az i. tárggyal együtt égetett tárgyak száma",
+          "Az első i tárgy kiégetéséhez szükséges minimális idő",
+          "A legkisebb sorszámú társ, akivel együtt égetjük az i. tárgyat",
+          "Az i. tárgy minimális égetési ideje"
+        ]
+      },
+      "answer": [2, 1, 3, 4],
+      "explanation": "A jelölések megfelelnek a diák definícióinak.",
+      "difficulty": "medium"
+    },
+    {
+      "id": "TUKOR-1",
+      "topic": "tukorszó",
+      "type": "multiple_choice",
+      "prompt": "Tükörszó feladat: mely állítások igazak?",
+      "options": [
+        { "id": 1, "text": "Az egybetűs szavak tükörszavak." },
+        { "id": 2, "text": "Ha az első és utolsó betű egyforma, elég a köztes rész átalakítása." },
+        { "id": 3, "text": "M(i,j) azt jelenti, hány karaktert törlünk, hogy tükörszó legyen." },
+        { "id": 4, "text": "Ha az első és utolsó betű különbözik, két lehetőség: elsőt a végére vagy utolsót az elejére szúrjuk." }
+      ],
+      "answer": [1, 2, 4],
+      "explanation": "M(i,j) a beszúrások számát méri, nem törlést.",
+      "difficulty": "medium"
+    },
+    {
+      "id": "ROD-1",
+      "topic": "rud_darabolas",
+      "type": "true_false",
+      "prompt": "A rúd darabolás feladatnál egy vágás költsége az egész eredeti rúd hossza.",
+      "answer": false,
+      "explanation": "A vágás költsége mindig az éppen vágott aktuális darab hossza.",
+      "difficulty": "easy"
+    },
+    {
+      "id": "ROD-2",
+      "topic": "rud_darabolas",
+      "type": "single_choice",
+      "prompt": "Miért működik a dinamikus programozás a rúd darabolás feladatnál?",
+      "options": [
+        { "id": 1, "text": "Mert az első vágás helye után a két rész optimális vágása független egymástól." },
+        { "id": 2, "text": "Mert minden részre ugyanannyit vágunk." },
+        { "id": 3, "text": "Mert a mohó: mindig középen vágunk, optimális." },
+        { "id": 4, "text": "Mert csak egyetlen lehetséges vágási sorrend van." }
+      ],
+      "answer": 1,
+      "explanation": "Optimális struktúra: ha K az első vágás, mindkét oldalon optimális rész-megoldás van.",
+      "difficulty": "medium"
+    },
+    {
+      "id": "KNAP-1",
+      "topic": "hatizsak",
+      "type": "single_choice",
+      "prompt": "Melyik írja le helyesen az E(X,i) DP átmenetet a hátizsák feladatban?",
+      "options": [
+        { "id": 1, "text": "E(X,i)=E(X,i-1)+E(X-S(i),i-1)" },
+        { "id": 2, "text": "E(X,i)=max(E(X,i-1), E(X-S(i),i-1)+F(i))" },
+        { "id": 3, "text": "E(X,i)=min(E(X,i-1),F(i))" },
+        { "id": 4, "text": "E(X,i)=F(i), ha S(i)≤X, különben 0" }
+      ],
+      "answer": 2,
+      "explanation": "Klasszikus 0-1 hátizsák rekurzió.",
+      "difficulty": "easy"
+    },
+    {
+      "id": "KNAP-2",
+      "topic": "hatizsak",
+      "type": "true_false",
+      "prompt": "Ha E(X,i)=E(X,i-1), akkor az i. tárgyat nem tesszük be a hátizsákba.",
+      "answer": true,
+      "explanation": "Kiírásnál ezt használjuk a tárgyak visszafejtéséhez.",
+      "difficulty": "easy"
+    },
+    {
+      "id": "COIN-1",
+      "topic": "penzvaltas_reszosszeg",
+      "type": "multiple_choice",
+      "prompt": "Adott pénzjegyekből kifizethető-e F összeg? Válaszd ki az igaz állításokat!",
+      "options": [
+        { "id": 1, "text": "V(X,i) igaz, ha X kifizethető az első i pénzjegyből." },
+        { "id": 2, "text": "V(X,i) igaz lehet akkor is, ha X<0." },
+        { "id": 3, "text": "V(X,i) igaz, ha V(X,i-1) igaz, vagy használjuk az i. pénzjegyet." },
+        { "id": 4, "text": "A naiv megoldás exponenciális, a DP megoldás O(N*F)." }
+      ],
+      "answer": [1, 3, 4],
+      "explanation": "Az X<0 eseteket nem engedjük; a többiek a diák állításai.",
+      "difficulty": "medium"
+    },
+    {
+      "id": "COIN-2",
+      "topic": "penzcimlet_valasztas",
+      "type": "single_choice",
+      "prompt": "Mit tárol V(X,i) a 'pénzcímlet kiválasztás' DP változatban?",
+      "options": [
+        { "id": 1, "text": "Azt, hogy igaz/hamis módon kifizethető-e X." },
+        { "id": 2, "text": "Az utolsó felhasznált pénzcímlet indexét X felbontásában, vagy N+1-et, ha nem lehet." },
+        { "id": 3, "text": "Az összes felhasznált címlet darabszámát." },
+        { "id": 4, "text": "A minimális címletszámot X-re." }
+      ],
+      "answer": 2,
+      "explanation": "Így tudjuk visszafejteni, mely címletek kellenek.",
+      "difficulty": "hard"
+    },
+    {
+      "id": "SIBLING-1",
+      "topic": "testveries_osztozkodas",
+      "type": "single_choice",
+      "prompt": "A testvéries osztozkodás feladat célja:",
+      "options": [
+        { "id": 1, "text": "Az egyik testvér értéke maximális legyen." },
+        { "id": 2, "text": "A két testvér kapott összértéke közti különbség minimális legyen." },
+        { "id": 3, "text": "Mindketten ugyanazokat az ajándékokat kapják." },
+        { "id": 4, "text": "A lehető legkevesebb ajándékot használjuk fel." }
+      ],
+      "answer": 2,
+      "explanation": "Ez a 'testvéries' definíció a jegyzetben.",
+      "difficulty": "easy"
+    },
+    {
+      "id": "TREASURE-1",
+      "topic": "kincs",
+      "type": "match_pairs",
+      "prompt": "Párosítsd a kincsgyűjtős DP feladat jelöléseit a jelentésükkel!",
+      "pairs": {
+        "left": [
+          "Gy(i,j)",
+          "Kincs(i,j)='*'",
+          "Kincs(i,j)='+'",
+          "Gy(N,M)"
+        ],
+        "right": [
+          "Van kincs az adott mezőn",
+          "Az akadály jelölése, ahova nem léphetünk",
+          "A (i,j) mezőig elérhető maximális kincsszám",
+          "A feladat végső megoldása"
+        ]
+      },
+      "answer": [3, 1, 2, 4],
+      "explanation": "A diák szerinti jelölés: Gy = max kincs addig; '*' kincs; '+' akadály; Gy(N,M) az eredmény.",
+      "difficulty": "easy"
+    },
+    {
+      "id": "MIX-1",
+      "topic": "strategia",
+      "type": "multiple_choice",
+      "prompt": "Mely állítások jellemzőek ÁLTALÁBAN dinamikus programozásra?",
+      "options": [
+        { "id": 1, "text": "Optimális részstruktúrát feltételezünk." },
+        { "id": 2, "text": "Átfedő részproblémák esetén különösen hasznos." },
+        { "id": 3, "text": "Mindig helyettesíthető egyszerű mohóval." },
+        { "id": 4, "text": "Gyakran táblázatkitöltés formájában implementáljuk." }
+      ],
+      "answer": [1, 2, 4],
+      "explanation": "A 3 hamis: pont ahol mohó nem jó, ott jön DP.",
+      "difficulty": "easy"
+    },
+  {
+    "id": "DP-4",
+    "topic": "strategia",
+    "type": "single_choice",
+    "prompt": "Mi a dinamikus programozás egyik fő előfeltétele?",
+    "options": [
+      { "id": 1, "text": "A részproblémák egymástól való függetlensége" },
+      { "id": 2, "text": "A részproblémák körkörös függése" },
+      { "id": 3, "text": "Az optimális részstruktúra megléte" },
+      { "id": 4, "text": "A mohó választás lehetősége" }
+    ],
+    "answer": 3,
+    "explanation": "A DP az optimális részstruktúrára épít, ahol a nagyobb probléma megoldása a kisebbek optimális megoldásából állítható elő.",
+    "difficulty": "medium"
+  },
+  {
+    "id": "DP-5",
+    "topic": "strategia",
+    "type": "true_false",
+    "prompt": "A dinamikus programozás módszere mindig hatékonyabb, mint a mohó algoritmus.",
+    "answer": false,
+    "explanation": "A DP nem mindig gyorsabb; sokszor a mohó is optimális és egyszerűbb.",
+    "difficulty": "medium"
+  },
+  {
+    "id": "DP-6",
+    "topic": "strategia",
+    "type": "multiple_choice",
+    "prompt": "Milyen irányban történik a dinamikus programozás tipikus táblázatkitöltése?",
+    "options": [
+      { "id": 1, "text": "Felülről lefelé, rekurzívan" },
+      { "id": 2, "text": "Alulról felfelé, iteratívan" },
+      { "id": 3, "text": "Középről kifelé" },
+      { "id": 4, "text": "Random módon" }
+    ],
+    "answer": [1, 2],
+    "explanation": "A DP megoldható felülről lefelé (rekurzió + memorizálás) és alulról felfelé (iteratív táblázatkitöltés) módon is.",
+    "difficulty": "medium"
+  },
+  {
+    "id": "DP-7",
+    "topic": "strategia",
+    "type": "single_choice",
+    "prompt": "Mit jelent az, hogy a részproblémák 'körmentes függésűek'?",
+    "options": [
+      { "id": 1, "text": "Nem tartalmazhatnak ciklikus hivatkozást egymásra" },
+      { "id": 2, "text": "Mindig ugyanazt a részproblémát hívják újra" },
+      { "id": 3, "text": "Nem lehetnek egymás részei" },
+      { "id": 4, "text": "Csak az egyik irányban hivatkozhatnak vissza" }
+    ],
+    "answer": 1,
+    "explanation": "Ha a függések körmentesek, akkor létezik topologikus sorrend, amelyben a részproblémák kiszámíthatók.",
+    "difficulty": "medium"
+  },
+  {
+    "id": "LCS-4",
+    "topic": "LCS",
+    "type": "single_choice",
+    "prompt": "Mi a leghosszabb közös részsorozat problémájának alapötlete?",
+    "options": [
+      { "id": 1, "text": "A közös karakterlánc megtalálása megszakítás nélkül" },
+      { "id": 2, "text": "Az egyik sorozatból a másikhoz illeszthető leghosszabb rész kiválasztása, elemek elhagyásával" },
+      { "id": 3, "text": "A két sorozat szorzatmátrixának maximumkeresése" },
+      { "id": 4, "text": "A teljes sorozatok összeillesztése karakterenként" }
+    ],
+    "answer": 2,
+    "explanation": "Az LCS olyan leghosszabb sorozat, ami mindkettőből elérhető elemek elhagyásával.",
+    "difficulty": "medium"
+  },
+  {
+    "id": "LCS-5",
+    "topic": "LCS",
+    "type": "single_choice",
+    "prompt": "Mit tárol a H(i,j) mátrix a memorizálásos LCS megoldásban?",
+    "options": [
+      { "id": 1, "text": "A már kiszámított részprobléma-értékeket" },
+      { "id": 2, "text": "A következő kiszámolandó indexeket" },
+      { "id": 3, "text": "A karakterek ASCII kódját" },
+      { "id": 4, "text": "Az aktuális maximum hosszát globálisan" }
+    ],
+    "answer": 1,
+    "explanation": "A memorizálás során a kiszámított L(i,j) értékeket eltároljuk a H mátrixban, hogy újrahasznosíthatók legyenek.",
+    "difficulty": "medium"
+  },
+  {
+    "id": "LCS-6",
+    "topic": "LCS",
+    "type": "true_false",
+    "prompt": "A LCS rekurziójában, ha X(i)=Y(j), akkor az érték mindig eggyel növekszik az előzőhöz képest.",
+    "answer": true,
+    "explanation": "Ha a két karakter azonos, a közös részsorozat hossza nő.",
+    "difficulty": "easy"
+  },
+  {
+    "id": "TOWER-3",
+    "topic": "toronyepites",
+    "type": "multiple_choice",
+    "prompt": "Miért kell a toronyépítésnél a kockákat csökkenő súly szerint rendezni?",
+    "options": [
+      { "id": 1, "text": "Hogy a rekurzió csak az előző elemekre hivatkozzon" },
+      { "id": 2, "text": "Hogy elkerüljük az instabil kombinációkat" },
+      { "id": 3, "text": "Mert így minden lehetséges sorrend vizsgálható" },
+      { "id": 4, "text": "Hogy a legkönnyebb legyen legalul" }
+    ],
+    "answer": [1, 2],
+    "explanation": "A csökkenő rendezés biztosítja, hogy csak korábbi (nagyobb) súlyokra építhetünk.",
+    "difficulty": "hard"
+  },
+  {
+    "id": "KEMENCE-2",
+    "topic": "kemence",
+    "type": "true_false",
+    "prompt": "A kemence algoritmusban az i. tárgy kiégetési ideje mindig független az előző tárgyaktól.",
+    "answer": false,
+    "explanation": "A kemence kapacitás (K vagy S) miatt az idő a korábbi csoportokra is támaszkodik.",
+    "difficulty": "medium"
+  },
+  {
+    "id": "TUKOR-2",
+    "topic": "tukorszó",
+    "type": "single_choice",
+    "prompt": "Mit jelent M(i,j)=1+min(M(i+1,j),M(i,j-1)) a tükörszó feladatban?",
+    "options": [
+      { "id": 1, "text": "Ha a két szélső betű különbözik, egy beszúrással lehet kiegyenlíteni" },
+      { "id": 2, "text": "Ha a betűk azonosak, akkor 1-gyel nő a beszúrás" },
+      { "id": 3, "text": "A szó mindig palindrom" },
+      { "id": 4, "text": "A karaktereket törölni kell" }
+    ],
+    "answer": 1,
+    "explanation": "Ha a két szélső karakter eltér, beszúrjuk az egyiket a másik oldalra, ezért +1 beszúrás kell.",
+    "difficulty": "medium"
+  },
+  {
+    "id": "ROD-3",
+    "topic": "rud_darabolas",
+    "type": "true_false",
+    "prompt": "A rúd darabolás feladat megoldható mohó algoritmussal, ha a vágási költség arányos a rúd hosszával.",
+    "answer": false,
+    "explanation": "A mohó nem ad optimális sorrendet, mert a jövőbeli vágások is befolyásolják a költséget.",
+    "difficulty": "hard"
+  },
+  {
+    "id": "KNAP-3",
+    "topic": "hatizsak",
+    "type": "multiple_choice",
+    "prompt": "A hátizsák DP táblázatban mit jelent az E(X,i) cella?",
+    "options": [
+      { "id": 1, "text": "Az első i tárgyból kiválasztható maximális érték, X kapacitás mellett" },
+      { "id": 2, "text": "Az i. tárgy súlya" },
+      { "id": 3, "text": "Az aktuális kapacitás kihasználtsága" },
+      { "id": 4, "text": "A tárgyak száma, amit bepakoltunk" }
+    ],
+    "answer": [1],
+    "explanation": "E(X,i) = maximum érték az első i tárgyból, ha a kapacitás X.",
+    "difficulty": "medium"
+  },
+  {
+    "id": "COIN-3",
+    "topic": "penzvaltas_reszosszeg",
+    "type": "single_choice",
+    "prompt": "Mi a pénzváltás probléma időkomplexitása a DP megoldásnál?",
+    "options": [
+      { "id": 1, "text": "O(2^N)" },
+      { "id": 2, "text": "O(N*F)" },
+      { "id": 3, "text": "O(F^2)" },
+      { "id": 4, "text": "O(N+F)" }
+    ],
+    "answer": 2,
+    "explanation": "A DP táblázat mérete N×F, így az idő és memória O(N*F).",
+    "difficulty": "medium"
+  },
+  {
+    "id": "TREASURE-2",
+    "topic": "kincs",
+    "type": "true_false",
+    "prompt": "A kincs algoritmusban a jármű csak jobbra és lefelé mozoghat.",
+    "answer": true,
+    "explanation": "Ez a feladat feltétele: a terep lejt, tehát csak két irány megengedett.",
+    "difficulty": "easy"
+  },
+  {
+    "id": "SIBLING-2",
+    "topic": "testveries_osztozkodas",
+    "type": "multiple_choice",
+    "prompt": "Milyen tulajdonságai vannak az igazságos osztozkodás DP-megoldásának?",
+    "options": [
+      { "id": 1, "text": "Két dimenziós DP mátrixot használ (V(X,Y,i))" },
+      { "id": 2, "text": "Mindkét testvér összértékét egyszerre vizsgálja" },
+      { "id": 3, "text": "A mohó stratégia itt is működik" },
+      { "id": 4, "text": "Az optimális megoldás a legnagyobb A≤E/2, amelyre V(A,A,N) igaz" }
+    ],
+    "answer": [1, 2, 4],
+    "explanation": "A DP kétdimenziós, mert két összeg alakul párhuzamosan.",
+    "difficulty": "hard"
+  },
+  {
+    "id": "KEMENCE-3",
+    "topic": "kemence",
+    "type": "single_choice",
+    "prompt": "Mit optimalizál a kemence algoritmus?",
+    "options": [
+      { "id": 1, "text": "A tárgyak számát, amit egyszerre égetünk" },
+      { "id": 2, "text": "A kemence üresjárati idejét" },
+      { "id": 3, "text": "A teljes kiégetési időt" },
+      { "id": 4, "text": "A legnagyobb égetési időt" }
+    ],
+    "answer": 3,
+    "explanation": "A cél a teljes kiégetési idő minimalizálása az égetési idők és korlátok figyelembevételével.",
+    "difficulty": "medium"
+  },
+  {
+    "id": "KEMENCE-4",
+    "topic": "kemence",
+    "type": "true_false",
+    "prompt": "A kemence algoritmusnál minden tárgy egyszerre kerül be és egyszerre jön ki a kemencéből.",
+    "answer": true,
+    "explanation": "A feladat definíciója szerint a csoport egyszerre kerül be és együtt jön ki, a maximális égetési idő határozza a blokk idejét.",
+    "difficulty": "easy"
+  },
+  {
+    "id": "KEMENCE-5",
+    "topic": "kemence",
+    "type": "single_choice",
+    "prompt": "Mit jelöl az S paraméter a súlykorlátos kemence változatban?",
+    "options": [
+      { "id": 1, "text": "A kemence maximális darabszámát" },
+      { "id": 2, "text": "Az összsúly korlátját, amit a kemence egyszerre elbír" },
+      { "id": 3, "text": "A tárgyak egyedi égetési hőmérsékletét" },
+      { "id": 4, "text": "Az égetési ciklusok számát" }
+    ],
+    "answer": 2,
+    "explanation": "A súlykorlátos verzióban egyszerre csak S súlyig rakhatók be tárgyak.",
+    "difficulty": "easy"
+  },
+  {
+    "id": "KEMENCE-6",
+    "topic": "kemence",
+    "type": "multiple_choice",
+    "prompt": "Mely változókat kell nyilvántartani a kemence algoritmus táblázatában?",
+    "options": [
+      { "id": 1, "text": "Idő(i) – minimális idő az első i tárgyig" },
+      { "id": 2, "text": "Db(i) – hány tárgyat égetünk együtt" },
+      { "id": 3, "text": "Kivel(i) – az együtt égetett tárgyak kezdőindexe" },
+      { "id": 4, "text": "Max(i) – az i. tárgy maximális hőmérséklete" }
+    ],
+    "answer": [1, 2, 3],
+    "explanation": "A diák szerint ezek a fő nyilvántartott értékek, a Max csak lokális változó a ciklusban.",
+    "difficulty": "medium"
+  },
+  {
+    "id": "DN-1",
+    "topic": "dns_szekvencia",
+    "type": "single_choice",
+    "prompt": "Mi a cél a DNS szekvencia feladatban?",
+    "options": [
+      { "id": 1, "text": "Megtalálni a leghosszabb ismétlődő részsorozatot" },
+      { "id": 2, "text": "Megszámolni, hány A és T betű van" },
+      { "id": 3, "text": "Azonosítani az összes különböző K hosszú szegmenst" },
+      { "id": 4, "text": "Kiszámítani a leggyakoribb K hosszú részsorozatot" }
+    ],
+    "answer": 4,
+    "explanation": "A feladat a legtöbbször előforduló K hosszú részszekvencia megtalálása.",
+    "difficulty": "hard"
+  },
+  {
+    "id": "LEFED-1",
+    "topic": "lefed",
+    "type": "multiple_choice",
+    "prompt": "Mit jelent, hogy egy intervallumhalmaz lefedi az [1, N] intervallumot?",
+    "options": [
+      { "id": 1, "text": "Az [1,N] minden pontja szerepel valamely H elem intervallumában" },
+      { "id": 2, "text": "Az intervallumok diszjunktak" },
+      { "id": 3, "text": "Van legalább egy intervallum, ami tartalmazza 1-et és N-et is" },
+      { "id": 4, "text": "Minden pontot pontosan egy intervallum fed" }
+    ],
+    "answer": [1],
+    "explanation": "A lefedés definíciója: minden pontnak van olyan H intervallum, ami tartalmazza.",
+    "difficulty": "medium"
+  },
+  {
+    "id": "LEFED-2",
+    "topic": "lefed",
+    "type": "true_false",
+    "prompt": "A lefedés minimális költsége a legkevesebb intervallumot használó megoldást jelenti.",
+    "answer": false,
+    "explanation": "A költség a hosszok összege, nem feltétlenül az intervallumok száma.",
+    "difficulty": "medium"
+  },
+  {
+    "id": "KEPATLO-1",
+    "topic": "kepatlo",
+    "type": "single_choice",
+    "prompt": "Mit minimalizál a képátló feladatban a DP algoritmus?",
+    "options": [
+      { "id": 1, "text": "A fekete-fehér pixelek összesített eltérését (hiba K)" },
+      { "id": 2, "text": "A vonal hosszát" },
+      { "id": 3, "text": "A vonalon lévő pixelek számát" },
+      { "id": 4, "text": "A fehér pixelek számát" }
+    ],
+    "answer": 1,
+    "explanation": "A cél, hogy a két oldalon rossz színű pixelek (összesített hiba) minimális legyen.",
+    "difficulty": "hard"
+  },
+  {
+    "id": "CSOMAG-1",
+    "topic": "csomag",
+    "type": "single_choice",
+    "prompt": "Mi a cél a csomag feladatban?",
+    "options": [
+      { "id": 1, "text": "A két kamion kapacitásának teljes kihasználása" },
+      { "id": 2, "text": "A lehető legtöbb csomag felpakolása a két kamionra a sorrendet betartva" },
+      { "id": 3, "text": "A csomagok súlyának kiegyenlítése" },
+      { "id": 4, "text": "Az összes csomag kiszállítása" }
+    ],
+    "answer": 2,
+    "explanation": "A cél, hogy az első M csomag elférjen a két K kapacitású kamionon.",
+    "difficulty": "medium"
+  },
+  {
+    "id": "PAKOLAS-1",
+    "topic": "pakolas",
+    "type": "multiple_choice",
+    "prompt": "Milyen tulajdonságok jellemzik a pakolás feladatot?",
+    "options": [
+      { "id": 1, "text": "A konténerek sorrendje nem változtatható" },
+      { "id": 2, "text": "A kamionokra egymás utáni konténereket kell pakolni" },
+      { "id": 3, "text": "A cél, hogy a legterheltebb kamion terhelése minimális legyen" },
+      { "id": 4, "text": "Minden kamion egyforma kapacitású" }
+    ],
+    "answer": [1, 2, 3],
+    "explanation": "A DP célja az egyenletes elosztás elérése a sorrend megtartásával.",
+    "difficulty": "hard"
+  },
+  {
+    "id": "PAKOLAS-2",
+    "topic": "pakolas",
+    "type": "true_false",
+    "prompt": "A pakolás feladat megoldható egyszerű mohó stratégiával, ha a konténerek súlya azonos.",
+    "answer": true,
+    "explanation": "Ha minden súly azonos, bármely elosztás kiegyensúlyozott, tehát a mohó is elég.",
+    "difficulty": "easy"
+  },
+  {
+    "id": "OSSZEFOG-1",
+    "topic": "osszefoglalo",
+    "type": "multiple_choice",
+    "prompt": "Mely feladatok megoldhatók dinamikus programozással a felsoroltak közül?",
+    "options": [
+      { "id": 1, "text": "Leghosszabb közös részsorozat" },
+      { "id": 2, "text": "Toronyépítés" },
+      { "id": 3, "text": "Kincsgyűjtés" },
+      { "id": 4, "text": "Lineáris keresés" }
+    ],
+    "answer": [1, 2, 3],
+    "explanation": "A DP azokra a problémákra alkalmas, ahol optimális részstruktúra és átfedő részproblémák vannak.",
+    "difficulty": "easy"
+  },
+  {
+    "id": "OSSZEFOG-2",
+    "topic": "osszefoglalo",
+    "type": "single_choice",
+    "prompt": "Melyik állítás a legpontosabb a DP működésére?",
+    "options": [
+      { "id": 1, "text": "Az összes részproblémát kiszámítjuk, de mindegyiket csak egyszer" },
+      { "id": 2, "text": "Minden részproblémát többször is kiszámítunk" },
+      { "id": 3, "text": "Csak a legnagyobb részproblémát oldjuk meg" },
+      { "id": 4, "text": "A megoldás minden esetben rekurzív" }
+    ],
+    "answer": 1,
+    "explanation": "A tárolt részmegoldások miatt minden részproblémát csak egyszer kell kiszámítani.",
+    "difficulty": "medium"
+  },
+  {
+    "id": "OSSZEFOG-3",
+    "topic": "osszefoglalo",
+    "type": "true_false",
+    "prompt": "A dinamikus programozás a visszalépéses keresés gyorsított változata.",
+    "answer": false,
+    "explanation": "Nem keresés, hanem tárolásalapú optimalizálás; a visszalépés mást céloz.",
+    "difficulty": "medium"
+  },
+  {
+    "id": "OSSZEFOG-4",
+    "topic": "osszefoglalo",
+    "type": "multiple_choice",
+    "prompt": "Melyik lépés NEM része a DP stratégiájának?",
+    "options": [
+      { "id": 1, "text": "Optimális megoldás szerkezetének tanulmányozása" },
+      { "id": 2, "text": "Részproblémákra bontás" },
+      { "id": 3, "text": "A részproblémák eredményeinek elfelejtése minden iteráció után" },
+      { "id": 4, "text": "Az optimális megoldás előállítása a tárolt információkból" }
+    ],
+    "answer": [3],
+    "explanation": "A DP pont az eredmények megtartására épít.",
+    "difficulty": "easy"
+  }
+]
+
+
+}

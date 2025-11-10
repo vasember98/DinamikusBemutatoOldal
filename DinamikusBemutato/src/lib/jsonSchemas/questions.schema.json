@@ -1,0 +1,113 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "DynamicProgrammingQuizSet",
+  "type": "object",
+  "properties": {
+    "$schema": {
+      "type": "string",
+      "description": "Opciós hivatkozás a sémára (editor support)."
+    },
+    "version": {
+      "type": "string"
+    },
+    "source": {
+      "type": "string"
+    },
+    "language": {
+      "type": "string",
+      "enum": ["hu"]
+    },
+    "questions": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/question"
+      }
+    }
+  },
+  "required": ["version", "language", "questions"],
+  "definitions": {
+    "option": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": ["integer", "string"]
+        },
+        "text": {
+          "type": "string"
+        }
+      },
+      "required": ["id", "text"]
+    },
+    "matchPairs": {
+      "type": "object",
+      "properties": {
+        "left": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "right": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      },
+      "required": ["left", "right"]
+    },
+    "question": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": ["string", "integer"]
+        },
+        "topic": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "single_choice",
+            "multiple_choice",
+            "true_false",
+            "match_pairs"
+          ]
+        },
+        "prompt": {
+          "type": "string"
+        },
+        "options": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/option"
+          }
+        },
+        "pairs": {
+          "$ref": "#/definitions/matchPairs"
+        },
+        "answer": {
+          "oneOf": [
+            { "type": "integer" },
+            {
+              "type": "array",
+              "items": {
+                "type": ["integer", "string"]
+              }
+            },
+            { "type": "boolean" },
+            {
+              "type": "object",
+              "additionalProperties": true
+            },
+            { "type": "string" }
+          ]
+        },
+        "explanation": {
+          "type": "string"
+        },
+        "difficulty": {
+          "type": "string",
+          "enum": ["easy", "medium", "hard"]
+        }
+      },
+      "required": ["id", "topic", "type", "prompt", "answer"]
+    }
+  }
+}

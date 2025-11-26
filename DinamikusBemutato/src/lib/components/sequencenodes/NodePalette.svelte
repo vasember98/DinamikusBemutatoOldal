@@ -1,6 +1,4 @@
 <script lang="ts">
-  import InputNodeItem from '$lib/components/sequencenodes/paletteitems/InputNodePaletteItem.svelte';
-  import OutputNodeItem from '$lib/components/sequencenodes/paletteitems/OutputNodePaletteItem.svelte';
   let {
     compact = false,
     onCreateNode
@@ -14,8 +12,7 @@
     <h3 class="text-sm font-semibold">Nodes</h3>
   </header>
   <div class="p-2 grid gap-2">
-    <InputNodeItem onCreate={onCreateNode} />
-    <OutputNodeItem onCreate={onCreateNode} />
+    <div class="text-xs text-gray-500 p-2">Palette items not yet implemented</div>
   </div>
   <footer class="px-3 pb-3">
     <p class="text-xs text-neutral-500">

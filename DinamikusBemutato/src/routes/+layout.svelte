@@ -9,8 +9,8 @@
   let { children } = $props<{ children: Snippet }>();
   const HEADER_H = 56;
 </script>
-<div class="min-h-dvh grid grid-rows-[3.5rem_1fr] bg-white dark:bg-neutral-950">
-  <header class="relative h-[3.5rem] border-b border-neutral-200 dark:border-neutral-800">
+<div class="min-h-dvh bg-white dark:bg-neutral-950">
+  <header class="fixed top-0 left-0 right-0 h-[3.5rem] border-b border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-950 z-30">
     <TopNav />
   </header>
   <MobileSidebar />
@@ -18,7 +18,7 @@
   <div
     class="relative"
     style="
-      padding-top: 0;
+      padding-top: 3.5rem;
     "
   >
     <main

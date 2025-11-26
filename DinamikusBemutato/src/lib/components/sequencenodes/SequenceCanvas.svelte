@@ -1,7 +1,5 @@
 <script lang="ts"> 
   import type { CanvasEvent, NodeInstance, InputProps, OutputProps } from '$lib/types/nodes';
-  import InputNode from '$lib/components/sequencenodes/nodes/InputNode.svelte';
-  import OutputNode from '$lib/components/sequencenodes/nodes/OutputNode.svelte';
   let {
     nodes = [],
     selectedId = null,
@@ -39,7 +37,7 @@
   function select(id: string) { onCanvasEvent?.({ kind: 'select', id }); }
   function remove(id: string) { onCanvasEvent?.({ kind: 'delete', id }); }
   function indexOfNode(id: string): number {
-    return nodes.findIndex(n => n.id === id);
+    return nodes.findIndex((n: NodeInstance) => n.id === id);
   }
 </script>
 <div
@@ -59,27 +57,33 @@
   <ol class="grid gap-2" aria-label="Sequence steps">
     {#each nodes as n (n.id)}
       {#if n.type === 'input'}
-  <InputNode
+  <!-- <InputNode
     id={n.id}
     vars={n.props.vars ?? {}}
     selected={selectedId === n.id}
-    onSelect={({ id }) => select(id)}
-    onDelete={({ id }) => remove(id)}
-    onUpdateProps={({ id, vars }) =>
+    onSelect={({ id }: { id: string }) => select(id)}
+    onDelete={({ id }: { id: string }) => remove(id)}
+    onUpdateProps={({ id, vars }: { id: string; vars: any }) =>
       onCanvasEvent?.({ kind: 'updateProps', id, type: 'input', props: { vars } })
     }
-  />
+  /> -->
+  <li class="rounded-xl border p-2">
+    <div class="text-sm text-gray-500">Input node (component not implemented)</div>
+  </li>
 {:else if n.type === 'output'}
-  <OutputNode
+  <!-- <OutputNode
     id={n.id}
     results={n.props.results ?? {}}
     selected={selectedId === n.id}
-    onSelect={({ id }) => select(id)}
-    onDelete={({ id }) => remove(id)}
-    onUpdateProps={({ id, results }) =>
+    onSelect={({ id }: { id: string }) => select(id)}
+    onDelete={({ id }: { id: string }) => remove(id)}
+    onUpdateProps={({ id, results }: { id: string; results: any }) =>
       onCanvasEvent?.({ kind: 'updateProps', id, type: 'output', props: { results } })
     }
-  />
+  /> -->
+  <li class="rounded-xl border p-2">
+    <div class="text-sm text-gray-500">Output node (component not implemented)</div>
+  </li>
 {:else}
   <li class="rounded-xl border p-2">
     <div class="flex items-start gap-3">

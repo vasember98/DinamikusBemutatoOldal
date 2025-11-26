@@ -17,7 +17,9 @@
   class="fixed inset-0 z-50 bg-black/30 backdrop-blur-sm flex items-center justify-center p-4"
   role="dialog"
   aria-modal="true"
+  tabindex="0"
   on:click={onBackdrop}
+  on:keydown={(e) => { if (e.key === 'Escape') close(); }}
 >
   <div
     class="w-full max-w-lg rounded-2xl bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 shadow-xl"

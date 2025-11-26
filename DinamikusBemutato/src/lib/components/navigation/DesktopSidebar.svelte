@@ -5,7 +5,7 @@
 </script>
 <aside
   class="hidden md:block fixed inset-y-0 left-0 z-20 bg-white dark:bg-neutral-950
-         border-r border-neutral-200 dark:border-neutral-800"
+         border-r border-neutral-200 dark:border-neutral-800 overflow-y-auto"
   style="
     top: {HEADER_H}px;
     width: {$sidebarWidth}px;

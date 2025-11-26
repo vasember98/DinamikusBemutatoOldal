@@ -20,41 +20,58 @@ export const load: PageServerLoad = async ({ locals }) => {
 };
 export const actions: Actions = {
 	login: async ({ request, cookies }) => {
-		const data = await request.formData();
-		const username = String(data.get('username') ?? '').trim();
-		const password = String(data.get('password') ?? '');
+		const formData = await request.formData();
+		
+		const usernameRaw = formData.get('username');
+		const passwordRaw = formData.get('password');
+		
+		const username = String(usernameRaw ?? '').trim();
+		const password = String(passwordRaw ?? '');
+		
 		if (!username || !password) {
 			return fail(400, {
 				username,
 				message: 'Felhasználónév és jelszó megadása kötelező.'
 			});
 		}
-		const user = await verifyUser(username, password);
-		if (!user) {
+		
+		const authenticatedUser = await verifyUser(username, password);
+		
+		if (!authenticatedUser) {
 			return fail(400, {
 				username,
 				message: 'Hibás felhasználónév vagy jelszó.'
 			});
 		}
-		const token = generateSessionToken();
-		const session = await createSession(token, user.id);
-		setSessionTokenCookie({ cookies }, token, session.expiresAt);
+		
+		const sessionToken = generateSessionToken();
+		const newSession = await createSession(sessionToken, authenticatedUser.id);
+		
+		setSessionTokenCookie({ cookies }, sessionToken, newSession.expiresAt);
+		
 		return { success: true };
 	},
+	
 	logout: async ({ locals, cookies }) => {
-		if (locals.session) {
-			await invalidateSession(locals.session.id);
+		const currentSession = locals.session;
+		
+		if (currentSession) {
+			await invalidateSession(currentSession.id);
 		}
+		
 		deleteSessionTokenCookie({ cookies });
+		
 		return { success: true };
 	},
 	register: async ({ request, cookies }) => {
-		const data = await request.formData();
-		const username = String(data.get('username') ?? '').trim();
-		const fullNameRaw = String(data.get('fullName') ?? '').trim();
-		const fullName = fullNameRaw.length ? fullNameRaw : null;
-		const password = String(data.get('password') ?? '');
-		const passwordConfirm = String(data.get('passwordConfirm') ?? '');
+		const formData = await request.formData();
+		
+		const username = String(formData.get('username') ?? '').trim();
+		const fullNameInput = String(formData.get('fullName') ?? '').trim();
+		const fullName = fullNameInput.length > 0 ? fullNameInput : null;
+		const password = String(formData.get('password') ?? '');
+		const passwordConfirm = String(formData.get('passwordConfirm') ?? '');
+		
 		if (!username || !password || !passwordConfirm) {
 			return fail(400, {
 				username,
@@ -62,6 +79,7 @@ export const actions: Actions = {
 				registerMessage: 'Minden kötelező mezőt tölts ki.'
 			});
 		}
+		
 		if (password !== passwordConfirm) {
 			return fail(400, {
 				username,
@@ -69,35 +87,44 @@ export const actions: Actions = {
 				registerMessage: 'A jelszavak nem egyeznek.'
 			});
 		}
-		if (password.length < 8) {
+		
+		const MIN_PASSWORD_LENGTH = 8;
+		if (password.length < MIN_PASSWORD_LENGTH) {
 			return fail(400, {
 				username,
 				fullName,
 				registerMessage: 'A jelszónak legalább 8 karakter hosszúnak kell lennie.'
 			});
 		}
-		const [existing] = await db
+		
+		const existingUsers = await db
 			.select({ id: table.user.id })
 			.from(table.user)
 			.where(eq(table.user.username, username));
-		if (existing) {
+		
+		if (existingUsers && existingUsers.length > 0) {
 			return fail(400, {
 				username,
 				fullName,
 				registerMessage: 'Ezzel a felhasználónévvel már létezik fiók.'
 			});
 		}
-		const passwordHash = await hashPassword(password);
-		const userId = crypto.randomUUID();
+		
+		const hashedPassword = await hashPassword(password);
+		const newUserId = crypto.randomUUID();
+		
 		await db.insert(table.user).values({
-			id: userId,
-			username,
-			fullName,
-			passwordHash
+			id: newUserId,
+			username: username,
+			fullName: fullName,
+			passwordHash: hashedPassword
 		});
-		const token = generateSessionToken();
-		const session = await createSession(token, userId);
-		setSessionTokenCookie({ cookies }, token, session.expiresAt);
+		
+		const sessionToken = generateSessionToken();
+		const userSession = await createSession(sessionToken, newUserId);
+		
+		setSessionTokenCookie({ cookies }, sessionToken, userSession.expiresAt);
+		
 		return { success: true };
 	}
 };

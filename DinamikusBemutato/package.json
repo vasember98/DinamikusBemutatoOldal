@@ -1,7 +1,8 @@
 {
 	"name": "dinamikusbemutato",
-	"private": true,
 	"version": "0.0.1",
+	"private": true,
+	"author": "Csikós András",
 	"type": "module",
 	"scripts": {
 		"dev": "vite dev --open",

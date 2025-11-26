@@ -1,6 +1,6 @@
 <script lang="ts">
   import type { NodeId } from '$lib/diagram/types';
-  import { getNode } from '$lib/diagram/store';
+  import { getNode } from '$lib/diagram/graph';
   import ZoneNode from './ZoneNode.svelte';
   import NodeBase from './NodeBase.svelte';
   type Props = { id: NodeId; class?: string };
@@ -8,11 +8,9 @@
   const rec = getNode(id);
 </script>
 {#if rec?.kind === 'zone'}
-  <ZoneNode id={id} class={className} />
+  <ZoneNode {id} class={className} />
 {:else}
-  <NodeBase id={id} draggable class={`rounded-md border border-neutral-200 dark:border-neutral-800 px-2 py-1 text-sm ${className}`}>
-    {#snippet children}
-      <span>{rec?.name ?? id}</span>
-    {/snippet}
+  <NodeBase {id} draggable class={`rounded-md border border-neutral-200 dark:border-neutral-800 px-2 py-1 text-sm ${className}`}>
+    <span>{rec?.kind ?? id}</span>
   </NodeBase>
 {/if}

@@ -29,10 +29,13 @@
             ["/tananyag/tovabbi-feladatok", "További feladatok"]
         ]
         ],
-        ["/kviz", "Kvíz"],
-        ["/kviz-keszito", "Kvíz készítő"],
-        ["/kviz-kerdesek", "Kvíz kérdés szerkesztő"]
-    ]
+        ["/kviz", "Kvíz", 
+        [
+            ["/kviz-keszito", "Kvíz készítő"],
+            ["/kviz-kerdesek", "Kvíz kérdés szerkesztő"]
+        ]
+        ]
+        ]
      
 
 }

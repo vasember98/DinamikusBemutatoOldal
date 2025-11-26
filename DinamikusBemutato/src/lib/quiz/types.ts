@@ -1,34 +1,44 @@
+// src/lib/quiz/quiz.types.ts
+export type QuizOption = {
+  id: number | string;
+  text: string;
+};
+
+export type MatchPairs = {
+  left: string[];
+  right: string[];
+};
+
+export type AnswerValue =
+  | number
+  | string
+  | boolean
+  | (number | string)[]
+  | Record<string, unknown>;
+
 export type QuestionType =
   | 'single_choice'
   | 'multiple_choice'
   | 'true_false'
   | 'match_pairs';
 
-export interface Option {
-  id: number | string;
-  text: string;
-}
+export type Difficulty = 'easy' | 'medium' | 'hard';
 
-export interface MatchPairs {
-  left: string[];
-  right: string[];
-}
-
-export interface QuestionDTO {
+export type QuizQuestion = {
   id: string | number;
   topic: string;
   type: QuestionType;
   prompt: string;
-  options?: Option[];
+  options?: QuizOption[];
   pairs?: MatchPairs;
-  answer: unknown;
+  answer: AnswerValue;
   explanation?: string;
-  difficulty?: 'easy' | 'medium' | 'hard';
-}
+  difficulty?: Difficulty;
+};
 
-export interface QuizDTO {
+export type QuizSet = {
   version: string;
   source?: string;
-  language: string;
-  questions: QuestionDTO[];
-}
+  language: 'hu';
+  questions: QuizQuestion[];
+};

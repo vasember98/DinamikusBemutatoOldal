@@ -3,6 +3,7 @@
     "menu": [
         ["/", "Main page"],
         [null, "demos", [
+            ["/notifications", "értesítések" ],
             ["/dnd-demo", "drag and drop"]
         ]],
         [
@@ -27,7 +28,10 @@
             ["/tananyag/hatizsak-feladat", "Hátizsák feladat"],
             ["/tananyag/tovabbi-feladatok", "További feladatok"]
         ]
-        ]
+        ],
+        ["/kviz", "Kvíz"],
+        ["/kviz-keszito", "Kvíz készítő"],
+        ["/kviz-kerdesek", "Kvíz kérdés szerkesztő"]
     ]
      
 

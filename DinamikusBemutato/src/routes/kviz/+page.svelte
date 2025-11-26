@@ -8,6 +8,6 @@
 </script>
 
 <div class="page">
-  <h1>Dinamikus programozás – Kvíz</h1>
+  <h1>Dinamikus programozás - Kvíz</h1>
   <QuizEngine {quiz} />
 </div>

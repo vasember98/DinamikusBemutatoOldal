@@ -1,7 +1,5 @@
-// src/routes/kviz-keszito/+server.ts
 import type { RequestHandler } from './$types';
 import { json } from '@sveltejs/kit';
-
 import { db } from '$lib/server/db';
 import {
   quizSets,
@@ -10,12 +8,9 @@ import {
   type MatchPairs,
   type AnswerValue
 } from '$lib/server/db/schema';
-
 import { eq } from 'drizzle-orm';
 import type { QuizQuestion } from '$lib/quiz/types.ts';
-
 type Mode = 'create' | 'update';
-
 type IncomingPayload = {
   mode?: Mode;
   quizSetId?: number;
@@ -27,22 +22,18 @@ type IncomingPayload = {
   questionId?: number;
   question: QuizQuestion;
 };
-
 export const POST: RequestHandler = async ({ request }) => {
   try {
     const body = (await request.json()) as IncomingPayload;
     const mode: Mode = body.mode ?? 'create';
     const { quizSetMeta, question } = body;
     let { quizSetId, questionId } = body;
-
     if (!question.id || !question.topic || !question.type || !question.prompt) {
       return json(
         { error: 'Hiányzó kötelező mező a question-ben.' },
         { status: 400 }
       );
     }
-
-    // közös részek: answer + pairs
     const pairsJson: MatchPairs | null =
       question.type === 'match_pairs' && question.pairs
         ? {
@@ -50,10 +41,7 @@ export const POST: RequestHandler = async ({ request }) => {
             right: question.pairs.right
           }
         : null;
-
     const answerJson: AnswerValue = question.answer as AnswerValue;
-
-    // ---- 1) QuizSet ID előállítása ----
     if (mode === 'create') {
       if (!quizSetId) {
         const ids = await db
@@ -64,17 +52,14 @@ export const POST: RequestHandler = async ({ request }) => {
             language: quizSetMeta.language
           })
           .$returningId();
-
         const newId =
           typeof ids[0] === 'object' ? (ids[0] as any).id : ids[0];
-
         if (!newId) {
           return json(
             { error: 'Nem sikerült quiz_set sort létrehozni.' },
             { status: 500 }
           );
         }
-
         quizSetId = newId;
       }
     } else if (mode === 'update') {
@@ -85,17 +70,13 @@ export const POST: RequestHandler = async ({ request }) => {
         );
       }
     }
-
     if (!quizSetId) {
       return json(
         { error: 'Nem ismert quizSetId (create után sem).' },
         { status: 500 }
       );
     }
-
-    // ---- 2) Create vs Update ----
     let finalQuestionId: number;
-
     if (mode === 'create') {
       const ids = await db
         .insert(quizQuestions)
@@ -111,20 +92,16 @@ export const POST: RequestHandler = async ({ request }) => {
           pairs: pairsJson
         })
         .$returningId();
-
       const newQid =
         typeof ids[0] === 'object' ? (ids[0] as any).id : ids[0];
-
       if (!newQid) {
         return json(
           { error: 'Nem sikerült a kérdést beszúrni.' },
           { status: 500 }
         );
       }
-
       finalQuestionId = newQid;
     } else {
-      // UPDATE
       await db
         .update(quizQuestions)
         .set({
@@ -139,15 +116,11 @@ export const POST: RequestHandler = async ({ request }) => {
           pairs: pairsJson
         })
         .where(eq(quizQuestions.id, questionId!));
-
       finalQuestionId = questionId!;
-      // régi opciók törlése
       await db
         .delete(quizOptions)
         .where(eq(quizOptions.questionId, finalQuestionId));
     }
-
-    // ---- 3) Opciók beszúrása, ha vannak ----
     if (question.options && question.options.length > 0) {
       const rows = question.options.map((opt, index) => ({
         questionId: finalQuestionId,
@@ -155,10 +128,8 @@ export const POST: RequestHandler = async ({ request }) => {
         text: opt.text,
         sortOrder: index
       }));
-
       await db.insert(quizOptions).values(rows);
     }
-
     return json({
       ok: true,
       mode,

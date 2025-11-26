@@ -1,18 +1,14 @@
-// src/routes/profile/+page.server.ts
 import type { Actions, PageServerLoad } from './$types';
 import { redirect, fail } from '@sveltejs/kit';
 import { db } from '$lib/server/db';
 import * as table from '$lib/server/db/schema';
 import { eq } from 'drizzle-orm';
 import { hashPassword, verifyPassword } from '$lib/server/password';
-
 export const load: PageServerLoad = async ({ locals }) => {
 	const user = locals.user;
-
 	if (!user) {
 		throw redirect(302, '/login');
 	}
-
 	return {
 		user: {
 			id: user.id,
@@ -23,7 +19,6 @@ export const load: PageServerLoad = async ({ locals }) => {
 		}
 	};
 };
-
 export const actions: Actions = {
 	updateProfile: async ({ request, locals }) => {
 		const user = locals.user;
@@ -34,17 +29,14 @@ export const actions: Actions = {
 				action: 'updateProfile'
 			});
 		}
-
 		const data = await request.formData();
 		const fullName = String(data.get('fullName') ?? '').trim();
 		const avatarUrl = String(data.get('avatarUrl') ?? '').trim();
-
 		try {
 			await db
 				.update(table.user)
 				.set({ fullName, avatarUrl })
 				.where(eq(table.user.id, user.id));
-
 			return {
 				success: true,
 				message: 'Profil frissítve.',
@@ -61,7 +53,6 @@ export const actions: Actions = {
 			});
 		}
 	},
-
 	changePassword: async ({ request, locals }) => {
 		const user = locals.user;
 		if (!user) {
@@ -71,12 +62,10 @@ export const actions: Actions = {
 				action: 'changePassword'
 			});
 		}
-
 		const data = await request.formData();
 		const currentPassword = String(data.get('current_password') ?? '');
 		const newPassword = String(data.get('new_password') ?? '');
 		const confirm = String(data.get('confirm_password') ?? '');
-
 		if (!currentPassword || !newPassword || !confirm) {
 			return fail(400, {
 				success: false,
@@ -84,7 +73,6 @@ export const actions: Actions = {
 				action: 'changePassword'
 			});
 		}
-
 		if (newPassword !== confirm) {
 			return fail(400, {
 				success: false,
@@ -92,7 +80,6 @@ export const actions: Actions = {
 				action: 'changePassword'
 			});
 		}
-
 		if (newPassword.length < 8) {
 			return fail(400, {
 				success: false,
@@ -100,13 +87,11 @@ export const actions: Actions = {
 				action: 'changePassword'
 			});
 		}
-
 		try {
 			const [dbUser] = await db
 				.select({ passwordHash: table.user.passwordHash })
 				.from(table.user)
 				.where(eq(table.user.id, user.id));
-
 			if (!dbUser) {
 				return fail(400, {
 					success: false,
@@ -114,7 +99,6 @@ export const actions: Actions = {
 					action: 'changePassword'
 				});
 			}
-
 			const validCurrent = await verifyPassword(currentPassword, dbUser.passwordHash);
 			if (!validCurrent) {
 				return fail(400, {
@@ -123,16 +107,11 @@ export const actions: Actions = {
 					action: 'changePassword'
 				});
 			}
-
 			const newHash = await hashPassword(newPassword);
-
 			await db
 				.update(table.user)
 				.set({ passwordHash: newHash })
 				.where(eq(table.user.id, user.id));
-
-			// Ide teheted a sessionök érvénytelenítését, ha szeretnéd.
-
 			return {
 				success: true,
 				message: 'Jelszó frissítve.',

@@ -2,7 +2,6 @@
   import type { CanvasEvent, NodeInstance, InputProps, OutputProps } from '$lib/types/nodes';
   import InputNode from '$lib/components/sequencenodes/nodes/InputNode.svelte';
   import OutputNode from '$lib/components/sequencenodes/nodes/OutputNode.svelte';
-
   let {
     nodes = [],
     selectedId = null,
@@ -12,13 +11,9 @@
     selectedId?: string | null;
     onCanvasEvent?: (ev: CanvasEvent) => void;
   }>();
-
   const MIME = 'application/x-node';
-
-  // reactive insert index
   let insertIndex = $state<number>(nodes.length);
   $effect(() => { insertIndex = Math.min(insertIndex, nodes.length); });
-
   function onDragOverCanvas(e: DragEvent) {
     if (e.dataTransfer?.types.includes(MIME)) {
       e.preventDefault();
@@ -30,7 +25,6 @@
     if (!txt) return;
     let payload: any;
     try { payload = JSON.parse(txt); } catch { return; }
-
     if (payload.kind === 'input-node') {
       const props: InputProps = { vars: {} };
       onCanvasEvent?.({ kind: 'create', type: 'input', props, atIndex: insertIndex });
@@ -41,17 +35,13 @@
       e.preventDefault();
     }
   }
-
   function setInsert(i: number) { insertIndex = i; }
-
   function select(id: string) { onCanvasEvent?.({ kind: 'select', id }); }
   function remove(id: string) { onCanvasEvent?.({ kind: 'delete', id }); }
-
   function indexOfNode(id: string): number {
     return nodes.findIndex(n => n.id === id);
   }
 </script>
-
 <div
   class="max-w-none"
   role="application"
@@ -60,14 +50,12 @@
   ondrop={onDropCanvas}
   aria-dropeffect="copy"
 >
-  <!-- TOP drop slot -->
   <div
     class="h-4 -mb-2 rounded border border-dashed border-transparent data-[active=true]:border-blue-400"
     ondragenter={() => setInsert(0)}
     data-active={insertIndex === 0}
     aria-hidden="true"
   ></div>
-
   <ol class="grid gap-2" aria-label="Sequence steps">
     {#each nodes as n (n.id)}
       {#if n.type === 'input'}
@@ -93,7 +81,6 @@
     }
   />
 {:else}
-  <!-- existing simple row summaries stay the same for the other types -->
   <li class="rounded-xl border p-2">
     <div class="flex items-start gap-3">
       <button
@@ -117,7 +104,6 @@
           </div>
         </div>
       </button>
-
       <button
         type="button"
         class="shrink-0 rounded-lg border px-2 py-1 text-xs hover:bg-neutral-100 dark:hover:bg-neutral-800"
@@ -127,7 +113,6 @@
     </div>
   </li>
 {/if}
-      <!-- BETWEEN drop slot (insert after this item) -->
       <div
         class="h-4 mt-2 rounded border border-dashed border-transparent data-[active=true]:border-blue-400"
         ondragenter={() => setInsert(indexOfNode(n.id) + 1)}
@@ -137,7 +122,6 @@
     {/each}
   </ol>
 </div>
-
 <style>
   [aria-pressed='true'] {
     outline: 2px solid hsl(220 80% 60% / 0.9);

@@ -3,23 +3,16 @@
   import { page } from '$app/state';
   import { expanded } from '$lib/stores/collapse';
   import SidebarItem from './SidebarItem.svelte'
-
   let { item } = $props<{ item: SidebarNode }>();
-
   const norm = (p: string) => p.replace(/\/+$/, '') || '/';
-
-  // ✅ correct: let <name> = $derived(...)
   let current  = $derived(norm(page.url.pathname));
   let target   = $derived(item.href ? norm(new URL(item.href, page.url).pathname) : '');
-
   let isClickable = $derived(!!item.href);
   let isActive    = $derived(isClickable && current === target);
   let isAncestor  = $derived(isClickable && target !== '/' && current.startsWith(target + '/'));
-
   const hasChildren = !!(item.children && item.children.length);
   const collapsible = (item as any).collapsible ?? hasChildren;
   const listId = `children-${item.id}`;
-
   function onKeydown(e: KeyboardEvent) {
     if (e.key === 'ArrowRight' && hasChildren && !$expanded.has(item.id)) {
       e.preventDefault(); expanded.toggle(item.id, true);
@@ -32,8 +25,6 @@
     expanded.toggle(item.id);
   };
 </script>
-
-
 <li class="group"
   role="treeitem"
   aria-expanded={hasChildren && collapsible ? $expanded.has(item.id) : undefined}
@@ -63,11 +54,9 @@
           <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 111.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
         </svg>
       </button>
-
     {:else}
       <span class="inline-block h-7 w-7"></span>
     {/if}
-
     {#if isClickable}
       <a
         href={item.href}
@@ -93,7 +82,6 @@
       </div>
     {/if}
   </div>
-
   {#if hasChildren && $expanded.has(item.id)}
     {@const kids = item.children ?? []}
     <ul
@@ -106,5 +94,4 @@
       {/each}
     </ul>
   {/if}
-
 </li>

@@ -1,8 +1,7 @@
 export type ParamType = 'data' | 'array' | 'unary' | 'binary';
-
 export interface ParamRow {
   id: string;
-  name: string;   // parameter label/name
+  name: string;
   type: ParamType;
-  _empty?: boolean; // internal flag for the trailing empty row
+  _empty?: boolean;
 }

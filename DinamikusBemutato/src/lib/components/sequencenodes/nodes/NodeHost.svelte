@@ -3,13 +3,10 @@
   import { getNode } from '$lib/diagram/store';
   import ZoneNode from './ZoneNode.svelte';
   import NodeBase from './NodeBase.svelte';
-
   type Props = { id: NodeId; class?: string };
   let { id, class: className = '' }: Props = $props();
-
   const rec = getNode(id);
 </script>
-
 {#if rec?.kind === 'zone'}
   <ZoneNode id={id} class={className} />
 {:else}

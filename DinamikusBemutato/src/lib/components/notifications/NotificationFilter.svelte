@@ -1,10 +1,8 @@
 <script lang="ts">
   type Filter = 'all' | 'unread' | 'system' | 'mentions';
-
   export let activeFilter: Filter = 'all';
   export let unreadCount = 0;
   export let onChangeFilter: (filter: Filter) => void;
-
   const filters: {
     id: Filter;
     label: string;
@@ -15,12 +13,10 @@
     { id: 'system', label: 'System' },
     { id: 'mentions', label: 'Mentions' }
   ];
-
   function select(filter: Filter) {
     onChangeFilter && onChangeFilter(filter);
   }
 </script>
-
 <div class="flex flex-wrap gap-2 text-[11px]">
   {#each filters as f}
     {#if f.id === activeFilter}

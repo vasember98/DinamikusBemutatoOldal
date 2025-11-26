@@ -4,27 +4,22 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
-/* Optional: make links inherit color and remove underline by default */
 @layer base {
   a { @apply no-underline text-inherit; }
 }
-
 .is-over {
-  outline: 2px solid rgb(16 185 129 / 0.7); /* emerald-500-ish */
+  outline: 2px solid rgb(16 185 129 / 0.7);
   outline-offset: 2px;
   border-radius: 1rem;
 }
-
 html.app-dragging,
 html.app-dragging * {
-  -webkit-user-select: none !important; /* ✅ Safari / iOS */
-  user-select: none !important;         /* ✅ modern browsers */
-  -webkit-touch-callout: none;          /* avoids long-press callout on iOS */
+  -webkit-user-select: none !important;
+  user-select: none !important;
+  -webkit-touch-callout: none;
 }
-
 .node-drag-surface {
-  touch-action: manipulation;           /* faster taps, no double-tap zoom */
-  -webkit-user-select: none;            /* Safari */
+  touch-action: manipulation;
+  -webkit-user-select: none;
   user-select: none;
 }

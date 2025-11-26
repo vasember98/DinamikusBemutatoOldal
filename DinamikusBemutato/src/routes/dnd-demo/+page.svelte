@@ -1,33 +1,23 @@
 <script lang="ts">
   import NodeBase from '$lib/components/sequencenodes/nodes/NodeBase.svelte';
-
   type DropDetail = { sourceId: string; targetId: string; pointer: { x: number; y: number } };
-
   let lastEdited = $state<string | null>(null);
   let overA = $state(false);
   let overB = $state(false);
-
-  // Where nodes live
   let palette = $state<string[]>(['input-1', 'input-2']);
   let zoneA = $state<string[]>([]);
   let zoneB = $state<string[]>([]);
-
   function onEdit(e: CustomEvent<{ id: string }>) {
     lastEdited = e.detail.id;
   }
-
   function moveNodeTo(targetId: 'palette' | 'zone-a' | 'zone-b', nodeId: string) {
-    // remove from all containers
     palette = palette.filter((x) => x !== nodeId);
     zoneA   = zoneA.filter((x) => x !== nodeId);
     zoneB   = zoneB.filter((x) => x !== nodeId);
-
-    // add to target
     if (targetId === 'palette') palette = [...palette, nodeId];
     if (targetId === 'zone-a')  zoneA   = [...zoneA, nodeId];
     if (targetId === 'zone-b')  zoneB   = [...zoneB, nodeId];
   }
-
   function onDropA(e: CustomEvent<DropDetail>) {
     moveNodeTo('zone-a', e.detail.sourceId);
   }
@@ -37,7 +27,6 @@
   function onDropPalette(e: CustomEvent<DropDetail>) {
     moveNodeTo('palette', e.detail.sourceId);
   }
-
   function resetAll() {
     palette = ['input-1', 'input-2'];
     zoneA = [];
@@ -46,7 +35,6 @@
     overA = overB = false;
   }
 </script>
-
 <div class="mx-auto max-w-5xl p-6">
   <header class="mb-6 flex items-center justify-between gap-4">
     <div>
@@ -68,9 +56,7 @@
       Reset
     </button>
   </header>
-
   <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-    <!-- Palette (now a droppable list so you can move nodes back) -->
     <div class="space-y-4">
       <NodeBase
         id="palette"
@@ -97,8 +83,6 @@
         {/snippet}
       </NodeBase>
     </div>
-
-    <!-- Zones (each renders the nodes currently inside it) -->
     <div class="space-y-4">
       <NodeBase
         id="zone-a"
@@ -126,7 +110,6 @@
           {/if}
         {/snippet}
       </NodeBase>
-
       <NodeBase
         id="zone-b"
         droppable

@@ -1,9 +1,7 @@
-// src/routes/kviz-keszito/+page.server.ts
 import type { PageServerLoad } from './$types';
 import { db } from '$lib/server/db';
 import { quizSets, quizQuestions, quizOptions } from '$lib/server/db/schema';
 import { eq } from 'drizzle-orm';
-
 type LoadedQuestion = {
   id: number;
   quizSetId: number;
@@ -16,24 +14,18 @@ type LoadedQuestion = {
   answer: unknown;
   pairs: unknown | null;
 };
-
 type LoadedOption = {
   id: number;
   logicalId: string;
   text: string;
   sortOrder: number;
 };
-
 type EditQuestionPayload = {
   question: LoadedQuestion;
   options: LoadedOption[];
 } | null;
-
 export const load: PageServerLoad = async (event) => {
-  // Itt már típusos: event.url: URL
   const { url } = event;
-
-  // 1) QuizSet lista
   const quizSetRows = await db
     .select({
       id: quizSets.id,
@@ -42,11 +34,8 @@ export const load: PageServerLoad = async (event) => {
       language: quizSets.language
     })
     .from(quizSets);
-
-  // 2) Edit mód, ha van ?questionId=
   const questionIdParam = url.searchParams.get('questionId');
   let editQuestion: EditQuestionPayload = null;
-
   if (questionIdParam) {
     const qid = Number(questionIdParam);
     if (!Number.isNaN(qid)) {
@@ -66,7 +55,6 @@ export const load: PageServerLoad = async (event) => {
         .from(quizQuestions)
         .where(eq(quizQuestions.id, qid))
         .limit(1);
-
       if (q) {
         const opts = await db
           .select({
@@ -77,12 +65,10 @@ export const load: PageServerLoad = async (event) => {
           })
           .from(quizOptions)
           .where(eq(quizOptions.questionId, qid));
-
         editQuestion = { question: q, options: opts };
       }
     }
   }
-
   return {
     quizSets: quizSetRows,
     editQuestion

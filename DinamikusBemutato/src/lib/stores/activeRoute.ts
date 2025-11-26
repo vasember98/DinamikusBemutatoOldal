@@ -1,8 +1,5 @@
-// src/lib/stores/activeRoute.ts
 import type { SidebarNode } from '$lib/types/sidebar';
-
 const strip = (p: string) => (p !== '/' && p.endsWith('/') ? p.slice(0, -1) : p);
-
 export function matchHref(href: string | undefined, url: URL) {
   if (!href) return 'none' as const;
   const cur = url.pathname.replace(/\/+$/, '');
@@ -11,7 +8,6 @@ export function matchHref(href: string | undefined, url: URL) {
   if (cur.startsWith(target + '/')) return 'ancestor' as const;
   return 'none' as const;
 }
-
 export function computeActiveSets(nodes: SidebarNode[], url: URL) {
   const active = new Set<string>();
   const ancestors = new Set<string>();

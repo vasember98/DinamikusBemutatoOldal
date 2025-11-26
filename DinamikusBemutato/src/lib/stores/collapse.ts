@@ -1,8 +1,6 @@
 import { writable } from 'svelte/store';
 import { browser } from '$app/environment';
-
 const KEY = 'sidebar:expanded';
-
 function createExpandedStore() {
   const initial = browser
     ? (() => {
@@ -14,13 +12,10 @@ function createExpandedStore() {
         }
       })()
     : new Set<string>();
-
   const { subscribe, set, update } = writable<Set<string>>(initial);
-
   const persist = (s: Set<string>) => {
     if (browser) localStorage.setItem(KEY, JSON.stringify([...s]));
   };
-
   return {
     subscribe,
     toggle(id: string, force?: boolean) {
@@ -33,7 +28,6 @@ function createExpandedStore() {
         return next;
       });
     },
-    // NEW: open/close many ids at once
     setMany(ids: string[], open: boolean) {
       update((prev) => {
         const next = new Set(prev);
@@ -48,5 +42,4 @@ function createExpandedStore() {
     }
   };
 }
-
 export const expanded = createExpandedStore();

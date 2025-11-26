@@ -4,7 +4,6 @@
   import { drag } from '$lib/dnd/DragManager';
   import { onDestroy } from 'svelte';
   import type { Snippet } from 'svelte';
-
   type Props = {
     id: string;
     label?: string;
@@ -14,65 +13,49 @@
     children?: Snippet;
     holdMs?: number;
     slop?: number;
-
-    // component “events” as props (Svelte 5 style)
     onedit?: (e: CustomEvent<{ id: string }>) => void;
     ondragenter?: (e: CustomEvent<any>) => void;
     ondragleave?: (e: CustomEvent<any>) => void;
     ondrop?: (e: CustomEvent<any>) => void;
   };
-
   let {
     id, label = undefined, draggable = true, droppable = false, class: className = '',
     children, holdMs = 220, slop = 6,
     onedit, ondragenter, ondragleave, ondrop
   }: Props = $props();
-
   let host = $state<HTMLElement | null>(null);
-
-  // reflect “am I dragging myself?”
   let isDraggingSelf = $state(false);
   const unDrag = drag.subscribe((v) => { isDraggingSelf = !!v && v.sourceId === id; });
   onDestroy(unDrag);
-
   function emitEdit() {
     const evt = new CustomEvent('edit', { bubbles: true, detail: { id } });
-    host?.dispatchEvent(evt);   // still bubble for internal listeners
-    onedit?.(evt);              // and call the component prop
+    host?.dispatchEvent(evt);
+    onedit?.(evt);
   }
-
-  // ---- NEW: forward DOM CustomEvents to component props (no DOM attributes) ----
   let unEnter = () => {}, unLeave = () => {}, unDrop = () => {};
   $effect(() => {
-    // clean previous
     unEnter(); unLeave(); unDrop();
     if (!host) return;
-
     if (ondragenter) {
       const h = (e: Event) => ondragenter?.(e as CustomEvent<any>);
       host.addEventListener('dragenter', h as EventListener);
       unEnter = () => host?.removeEventListener('dragenter', h as EventListener);
     } else unEnter = () => {};
-
     if (ondragleave) {
       const h = (e: Event) => ondragleave?.(e as CustomEvent<any>);
       host.addEventListener('dragleave', h as EventListener);
       unLeave = () => host?.removeEventListener('dragleave', h as EventListener);
     } else unLeave = () => {};
-
     if (ondrop) {
       const h = (e: Event) => ondrop?.(e as CustomEvent<any>);
       host.addEventListener('drop', h as EventListener);
       unDrop = () => host?.removeEventListener('drop', h as EventListener);
     } else unDrop = () => {};
   });
-
   onDestroy(() => { unEnter(); unLeave(); unDrop(); });
-
   const base =
     'node-base relative rounded-2xl border border-neutral-200/70 dark:border-neutral-800/80 bg-white dark:bg-neutral-900 shadow-sm select-none';
 </script>
-
 {#if droppable}
   <section bind:this={host} class={`${base} ${className}`} role="group" aria-label={label} use:useDroppable={{ id, label }}>
     {#if draggable}
@@ -108,7 +91,6 @@
     </div>
   </section>
 {/if}
-
 <style>
   .node-base { transition: box-shadow .12s ease, transform .12s ease; will-change: transform; }
   .node-base:focus-visible { outline: 2px solid var(--tw-ring-color, #3b82f6); outline-offset: 2px; }

@@ -1,4 +1,3 @@
-// seed/seed.ts
 import 'dotenv/config';
 import { db, schema, pool } from './db-seed';
 import { hashPassword } from '../src/lib/server/password';
@@ -16,17 +15,11 @@ const {
   session
 } = schema;
 
-/**
- * Táblák teljes resetje: DROP IF EXISTS + CREATE
- * FIGYELEM: minden adat elvész.
- */
 async function resetSchema() {
   console.log('--- SCHEMA RESET (drop + create tables) ---');
 
-  // FK-k ideiglenes kikapcsolása
   await pool.query('SET FOREIGN_KEY_CHECKS = 0');
 
-  // Gyerek → szülő sorrendben droppolunk
   await pool.query(`
     DROP TABLE IF EXISTS
       quiz_options,
@@ -39,8 +32,6 @@ async function resetSchema() {
       user;
   `);
 
-  // Táblák újralétrehozása – a Drizzle schema alapján
-  // 1) user
   await pool.query(`
     CREATE TABLE user (
       id           varchar(255)  NOT NULL,
@@ -55,7 +46,6 @@ async function resetSchema() {
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
   `);
 
-  // 2) session
   await pool.query(`
     CREATE TABLE session (
       id         varchar(255) NOT NULL,
@@ -69,7 +59,6 @@ async function resetSchema() {
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
   `);
 
-  // 3) tananyag
   await pool.query(`
     CREATE TABLE tananyag (
       id         varchar(50)  NOT NULL,
@@ -80,7 +69,6 @@ async function resetSchema() {
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
   `);
 
-  // 4) chapters
   await pool.query(`
     CREATE TABLE chapters (
       id             varchar(100) NOT NULL,
@@ -102,7 +90,6 @@ async function resetSchema() {
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
   `);
 
-  // 5) chapter_sources
   await pool.query(`
     CREATE TABLE chapter_sources (
       id         bigint       NOT NULL AUTO_INCREMENT,
@@ -119,7 +106,6 @@ async function resetSchema() {
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
   `);
 
-  // 6) quiz_sets
   await pool.query(`
     CREATE TABLE quiz_sets (
       id         bigint       NOT NULL AUTO_INCREMENT,
@@ -132,7 +118,6 @@ async function resetSchema() {
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
   `);
 
-  // 7) quiz_questions
   await pool.query(`
     CREATE TABLE quiz_questions (
       id          bigint       NOT NULL AUTO_INCREMENT,
@@ -155,7 +140,6 @@ async function resetSchema() {
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
   `);
 
-  // 8) quiz_options
   await pool.query(`
     CREATE TABLE quiz_options (
       id          bigint       NOT NULL AUTO_INCREMENT,
@@ -171,7 +155,6 @@ async function resetSchema() {
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
   `);
 
-  // FK-k visszakapcsolása
   await pool.query('SET FOREIGN_KEY_CHECKS = 1');
 
   console.log('--- SCHEMA RESET kész ---');
@@ -297,10 +280,11 @@ async function main() {
   try {
     console.log('SEED megkezd');
 
-    // Először drop + create minden tábla
     await resetSchema();
 
-    // Aztán mehetnek az adatok
+    await seedUsers();
+    await seedTananyagFromJson();
+    await seedQuizFromJson();
     await seedUsers();
     await seedTananyagFromJson();
     await seedQuizFromJson();

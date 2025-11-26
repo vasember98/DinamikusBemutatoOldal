@@ -1,16 +1,11 @@
-// src/lib/dnd/actions/draggable.ts
 import { startDrag, moveDrag, endDrag } from '../DragManager';
-
 type Opts = {
   id: string;
   activate?: 'immediate' | 'hold';
-  holdMs?: number;   // delay for long-press
-  slop?: number;     // movement threshold to trigger drag
+  holdMs?: number;
+  slop?: number;
 };
-
 let lastPointerGlobal = { x: 0, y: 0 };
-
-// Is this element (or an ancestor up to the node) interactive?
 function isInteractive(el: Element | null, stopAt: HTMLElement): boolean {
   const INTERACTIVE = /^(A|BUTTON|INPUT|SELECT|TEXTAREA|LABEL|SUMMARY|VIDEO|AUDIO|DETAILS)$/;
   while (el && el !== stopAt) {
@@ -19,7 +14,7 @@ function isInteractive(el: Element | null, stopAt: HTMLElement): boolean {
       he.isContentEditable ||
       (he.tagName && INTERACTIVE.test(he.tagName)) ||
       (he as HTMLInputElement).type === 'file' ||
-      he.getAttribute?.('role') === 'button' // catches some custom buttons
+      he.getAttribute?.('role') === 'button'
     ) {
       return true;
     }
@@ -27,24 +22,20 @@ function isInteractive(el: Element | null, stopAt: HTMLElement): boolean {
   }
   return false;
 }
-
 export function draggable(node: HTMLElement, opts: Opts) {
   let { id, activate = 'hold', holdMs = 220, slop = 6 } = opts;
-
   let dragging = false;
   let kbDragging = false;
   let startX = 0;
   let startY = 0;
   let suppressClick = false;
   let holdTimer: number | null = null;
-
   function clearHold() {
     if (holdTimer != null) {
       window.clearTimeout(holdTimer);
       holdTimer = null;
     }
   }
-
   function startDragFromPointer(e: PointerEvent) {
     const rect = node.getBoundingClientRect();
     const pointer = { x: e.clientX, y: e.clientY };
@@ -58,7 +49,6 @@ export function draggable(node: HTMLElement, opts: Opts) {
     document.documentElement.classList.add('app-dragging');
     node.setPointerCapture?.(e.pointerId);
   }
-
   function endDragClean() {
     endDrag();
     dragging = false;
@@ -66,17 +56,12 @@ export function draggable(node: HTMLElement, opts: Opts) {
     clearHold();
     document.documentElement.classList.remove('app-dragging');
   }
-
-  // Pointer handlers
   function onPointerDown(e: PointerEvent) {
     if (e.button !== 0) return;
     if (isInteractive(e.target as Element, node)) return;
-
     startX = e.clientX;
     startY = e.clientY;
-
     if (activate === 'immediate') {
-      // Defer until slop exceeded to preserve click
       const onMoveOnce = (ev: PointerEvent) => {
         const dx = Math.abs(ev.clientX - startX);
         const dy = Math.abs(ev.clientY - startY);
@@ -95,19 +80,16 @@ export function draggable(node: HTMLElement, opts: Opts) {
         startDragFromPointer(e);
       }, holdMs);
     }
-
     window.addEventListener('pointermove', onPointerMove);
     window.addEventListener('pointerup', onPointerUp, { once: true });
     window.addEventListener('pointercancel', onPointerCancel, { once: true });
     node.addEventListener('lostpointercapture', onLostCapture);
   }
-
   function onPointerMove(e: PointerEvent) {
     if (holdTimer != null) {
       const dx = Math.abs(e.clientX - startX);
       const dy = Math.abs(e.clientY - startY);
       if (dx >= slop || dy >= slop) {
-        // cancel long-press if user wiggles out
         clearHold();
       }
     }
@@ -117,7 +99,6 @@ export function draggable(node: HTMLElement, opts: Opts) {
       moveDrag(p);
     }
   }
-
   function onPointerUp(_e: PointerEvent) {
     clearHold();
     if (dragging) {
@@ -141,8 +122,6 @@ export function draggable(node: HTMLElement, opts: Opts) {
     }
     window.removeEventListener('pointermove', onPointerMove);
   }
-
-  // Stop the native click that follows a drag
   function onClickCapture(e: MouseEvent) {
     if (suppressClick) {
       e.stopPropagation();
@@ -150,8 +129,6 @@ export function draggable(node: HTMLElement, opts: Opts) {
       suppressClick = false;
     }
   }
-
-  // Keyboard: Space/Enter to pick up/put down; arrows to move
   function onKeyDown(e: KeyboardEvent) {
     const isActivateKey = e.key === ' ' || e.key === 'Enter';
     if (isActivateKey && !kbDragging) {
@@ -165,16 +142,13 @@ export function draggable(node: HTMLElement, opts: Opts) {
       document.documentElement.classList.add('app-dragging');
       return;
     }
-
     if (!kbDragging) return;
-
     let dx = 0, dy = 0;
     const step = 16;
     if (e.key === 'ArrowLeft') dx = -step;
     else if (e.key === 'ArrowRight') dx = step;
     else if (e.key === 'ArrowUp') dy = -step;
     else if (e.key === 'ArrowDown') dy = step;
-
     if (dx || dy) {
       e.preventDefault();
       const next = { x: lastPointerGlobal.x + dx, y: lastPointerGlobal.y + dy };
@@ -182,7 +156,6 @@ export function draggable(node: HTMLElement, opts: Opts) {
       moveDrag(next);
       return;
     }
-
     if (isActivateKey) {
       e.preventDefault();
       kbDragging = false;
@@ -193,11 +166,9 @@ export function draggable(node: HTMLElement, opts: Opts) {
       endDragClean();
     }
   }
-
   node.addEventListener('pointerdown', onPointerDown);
   node.addEventListener('click', onClickCapture, true);
   node.addEventListener('keydown', onKeyDown);
-
   return {
     update(next: Opts) {
       id = next.id ?? id;
@@ -211,7 +182,6 @@ export function draggable(node: HTMLElement, opts: Opts) {
       node.removeEventListener('click', onClickCapture, true);
       node.removeEventListener('keydown', onKeyDown);
       window.removeEventListener('pointermove', onPointerMove);
-      // in case the listeners are still pending (edge cases)
       window.removeEventListener('pointerup', onPointerUp);
       window.removeEventListener('pointercancel', onPointerCancel);
       node.removeEventListener('lostpointercapture', onLostCapture);

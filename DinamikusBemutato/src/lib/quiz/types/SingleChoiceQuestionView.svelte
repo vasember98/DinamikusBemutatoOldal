@@ -1,7 +1,6 @@
 <script lang="ts">
   import type { SingleChoiceQuestion } from '../model';
   type Status = 'unanswered' | 'correct' | 'wrong';
-
   const { question, value, status, revealCorrection, onanswer } = $props<{
     question: SingleChoiceQuestion;
     value: number | string | undefined;
@@ -9,11 +8,9 @@
     revealCorrection: boolean;
     onanswer: (val: number | string) => void;
   }>();
-
   function choose(id: number | string) {
     onanswer(id);
   }
-
   function itemClass(id: number | string) {
     if (!revealCorrection || status === 'unanswered') {
       return value === id ? 'selected' : '';
@@ -23,7 +20,6 @@
     return '';
   }
 </script>
-
 <div class="sc">
   {#each question.options as opt}
     <label class={itemClass(opt.id)}>
@@ -38,7 +34,6 @@
     </label>
   {/each}
 </div>
-
 <style>
   .sc {
     display: grid;

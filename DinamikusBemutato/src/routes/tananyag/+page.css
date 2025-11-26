@@ -6,24 +6,20 @@
     flex-direction: column;
     gap: 2rem;
   }
-
   .hero h1 {
     font-size: 2rem;
     font-weight: 600;
     margin-bottom: 0.75rem;
   }
-
   .hero p {
     line-height: 1.6;
     font-size: 0.98rem;
     color: #444;
   }
-
   .list h2 {
     font-size: 1.4rem;
     margin-bottom: 1rem;
   }
-
   ul {
     list-style: none;
     padding: 0;
@@ -31,7 +27,6 @@
     grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
     gap: 0.75rem;
   }
-
   li a {
     display: block;
     padding: 0.75rem 0.9rem;
@@ -43,7 +38,6 @@
     transition: transform 0.12s ease, box-shadow 0.12s ease,
       background 0.12s ease, border-color 0.12s ease;
   }
-
   li a:hover {
     transform: translateY(-1px);
     box-shadow: 0 6px 14px rgba(0, 0, 0, 0.08);

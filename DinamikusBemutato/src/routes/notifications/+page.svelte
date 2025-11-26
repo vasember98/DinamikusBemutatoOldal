@@ -2,21 +2,16 @@
   import NotificationShell from '$lib/components/notifications/NotificationsShell.svelte';
   import NotificationFilters from '$lib/components/notifications/NotificationFilter.svelte';
   import NotificationItem from '$lib/components/notifications/NotificationItem.svelte';
-
   type NotificationType = 'system' | 'comment' | 'mention' | 'warning';
-
   interface Notification {
     id: string;
     title: string;
     body: string;
     type: NotificationType;
     isRead: boolean;
-    createdAt: string; // ISO
+    createdAt: string;
   }
-
   type Filter = 'all' | 'unread' | 'system' | 'mentions';
-
-  // Mock data – hook this up to your backend later
   let notifications: Notification[] = [
     {
       id: '1',
@@ -51,10 +46,7 @@
       createdAt: '2025-11-08T01:00:00Z'
     }
   ];
-
   let activeFilter: Filter = 'all';
-
-  // derived values
   $: filteredNotifications = notifications.filter((n) => {
     if (activeFilter === 'all') return true;
     if (activeFilter === 'unread') return !n.isRead;
@@ -62,28 +54,22 @@
     if (activeFilter === 'mentions') return n.type === 'mention';
     return true;
   });
-
   $: unreadCount = notifications.filter((n) => !n.isRead).length;
-
   function setFilter(filter: Filter) {
     activeFilter = filter;
   }
-
   function markAllAsRead() {
     notifications = notifications.map((n) => ({ ...n, isRead: true }));
   }
-
   function clearAllRead() {
     notifications = notifications.filter((n) => !n.isRead);
   }
-
   function toggleRead(id: string) {
     notifications = notifications.map((n) =>
       n.id === id ? { ...n, isRead: !n.isRead } : n
     );
   }
 </script>
-
 <NotificationShell
   title="Notifications"
   subtitle="Stay on top of what’s happening in your project."
@@ -96,7 +82,6 @@
     {unreadCount}
     onChangeFilter={setFilter}
   />
-
   {#if filteredNotifications.length === 0}
     <div class="mt-10 flex flex-col items-center text-sm text-slate-500">
       <div class="mb-2 text-lg">No notifications here</div>
@@ -113,7 +98,6 @@
     </ul>
   {/if}
 </NotificationShell>
-
 <style>
   :global(body) {
     background-color: #020817;

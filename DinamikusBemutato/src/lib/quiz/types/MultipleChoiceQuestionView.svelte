@@ -1,7 +1,6 @@
 <script lang="ts">
   import type { MultipleChoiceQuestion } from '../model';
   type Status = 'unanswered' | 'correct' | 'wrong';
-
   const { question, value, status, revealCorrection, onanswer } = $props<{
     question: MultipleChoiceQuestion;
     value: (number | string)[] | undefined;
@@ -9,13 +8,10 @@
     revealCorrection: boolean;
     onanswer: (val: (number | string)[]) => void;
   }>();
-
   let selected = $state<Set<number | string>>(new Set(value ?? []));
-
   $effect(() => {
     selected = new Set(value ?? []);
   });
-
   function toggle(id: number | string) {
     const next = new Set(selected);
     if (next.has(id)) next.delete(id);
@@ -23,22 +19,18 @@
     selected = next;
     onanswer(Array.from(next));
   }
-
   function itemClass(id: number | string) {
     const isSelected = selected.has(id);
     const isCorrect = question.correctIds.includes(id);
-
     if (!revealCorrection || status === 'unanswered') {
       return isSelected ? 'selected' : '';
     }
-
     if (isCorrect && isSelected) return 'correct';
     if (isCorrect && !isSelected) return 'missed';
     if (!isCorrect && isSelected) return 'wrong';
     return '';
   }
 </script>
-
 <div class="mc">
   {#each question.options as opt}
     <label class={itemClass(opt.id)}>
@@ -52,7 +44,6 @@
     </label>
   {/each}
 </div>
-
 <style>
   .mc {
     display: grid;

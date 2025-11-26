@@ -1,4 +1,3 @@
-<!-- src/routes/kviz-keszito/+page.svelte -->
 <script lang="ts">
   import type { PageData } from './$types';
   import type {
@@ -7,57 +6,40 @@
     QuizQuestion,
     QuizSet
   } from '$lib/quiz/types.ts';
-
-  // ⬇⬇⬇ Runes-style props ⬇⬇⬇
   const { data } = $props<{ data: PageData }>();
-  // ⬆⬆⬆ NINCS export let ⬆⬆⬆
-
-  // ---- Konstansok ----
   const questionTypes: { value: QuestionType; label: string }[] = [
     { value: 'single_choice', label: 'Egyválaszos feleletválasztó' },
     { value: 'multiple_choice', label: 'Többválaszos feleletválasztó' },
     { value: 'true_false', label: 'Igaz / hamis' },
     { value: 'match_pairs', label: 'Összepárosítás' }
   ];
-
   const difficulties: { value: Difficulty; label: string }[] = [
     { value: 'easy', label: 'Könnyű' },
     { value: 'medium', label: 'Közepes' },
     { value: 'hard', label: 'Nehéz' }
   ];
-
-  // ---- Szerver adatok ----
   type QuizSetSummary = (typeof data.quizSets)[number];
   const quizSets = data.quizSets as QuizSetSummary[];
   const editingQuestionFromServer = data.editQuestion;
-
-  
-  
-  // ---- Állapotok (runes) ----
   let editingQuestionId = $state<number | null>(
     editingQuestionFromServer ? editingQuestionFromServer.question.id : null
   );
-
   let selectedQuizSetMode = $state<'existing' | 'new'>(
     editingQuestionFromServer ? 'existing' : (quizSets.length > 0 ? 'existing' : 'new')
   );
-
   let selectedQuizSetIdStr = $state<string>(
     editingQuestionFromServer
       ? String(editingQuestionFromServer.question.quizSetId)
       : (quizSets.length > 0 ? String(quizSets[0].id) : '')
   );
-
   let quizSetMeta = $state<QuizSet>({
     version: '1.0',
     source: 'DP.pdf',
     language: 'hu',
     questions: []
   });
-
   type OptionRow = { logicalId: string; text: string; isCorrect: boolean; };
   type MatchRow = { left: string; right: string; };
-
   let currentQuestionBase = $state({
     externalId: '',
     topic: '',
@@ -66,12 +48,9 @@
     explanation: '',
     difficulty: '' as '' | Difficulty
   });
-
   let optionRows = $state<OptionRow[]>([]);
   let matchRows = $state<MatchRow[]>([]);
   let trueFalseAnswer = $state<boolean>(true);
-
-  // ---- Helpers ----
   function resetTypeSpecificState(type: QuestionType) {
     if (type === 'true_false') {
       trueFalseAnswer = true;
@@ -87,16 +66,12 @@
       trueFalseAnswer = true;
     }
   }
-
-  // EDIT init csak egyszer (runes)
   let _initialized = $state(false);
   $effect.pre(() => {
     if (_initialized) return;
     if (!editingQuestionFromServer) { _initialized = true; return; }
-
     const q = editingQuestionFromServer.question;
     resetTypeSpecificState(q.type as QuestionType);
-
     currentQuestionBase = {
       externalId: q.externalId,
       topic: q.topic,
@@ -105,22 +80,18 @@
       explanation: q.explanation ?? '',
       difficulty: (q.difficulty ?? '') as '' | Difficulty
     };
-
     type LoadedOption = {
   id: number;
   logicalId: string;
   text: string;
   sortOrder: number;
 };
-
     if (q.type === 'true_false') {
   trueFalseAnswer = Boolean(q.answer);
 } else if (q.type === 'single_choice' || q.type === 'multiple_choice') {
   const ans = q.answer;
   const isArray = Array.isArray(ans);
-
   const loadedOptions = editingQuestionFromServer.options as LoadedOption[];
-
   optionRows = loadedOptions
     .slice()
     .sort((a: LoadedOption, b: LoadedOption) => a.sortOrder - b.sortOrder)
@@ -132,7 +103,6 @@
           : isArray
             ? (ans as (number | string)[]).includes(id)
             : false;
-
       return { logicalId: id, text: opt.text, isCorrect };
     });
 } else if (q.type === 'match_pairs') {
@@ -145,30 +115,22 @@
     }
   }
 }
-
-
     _initialized = true;
   });
-
-  // ---- Derived ----
   const selectedQuizSetId = $derived.by(() =>
     selectedQuizSetMode === 'existing' && selectedQuizSetIdStr
       ? Number(selectedQuizSetIdStr)
       : null
   );
-
   const answer = $derived.by(() => {
     if (currentQuestionBase.type === 'true_false') return trueFalseAnswer;
-
     if (currentQuestionBase.type === 'single_choice') {
       const correct = optionRows.find((o) => o.isCorrect);
       return correct ? correct.logicalId : '';
     }
-
     if (currentQuestionBase.type === 'multiple_choice') {
       return optionRows.filter((o) => o.isCorrect).map((o) => o.logicalId);
     }
-
     if (currentQuestionBase.type === 'match_pairs') {
       const obj: Record<string, string> = {};
       for (const row of matchRows) {
@@ -176,10 +138,8 @@
       }
       return obj;
     }
-
     return '';
   });
-
   const pairs = $derived.by(() => {
     if (currentQuestionBase.type !== 'match_pairs') return undefined;
     return {
@@ -187,7 +147,6 @@
       right: matchRows.map((r) => r.right).filter(Boolean)
     };
   });
-
   const questionPreview = $derived.by<QuizQuestion>(() => {
     const base: QuizQuestion = {
       id: currentQuestionBase.externalId || '',
@@ -204,15 +163,12 @@
     if (currentQuestionBase.type === 'match_pairs' && pairs) base.pairs = pairs;
     return base;
   });
-
   const quizSetPreview = $derived.by<QuizSet>(() => ({
     version: quizSetMeta.version,
     source: quizSetMeta.source,
     language: quizSetMeta.language,
     questions: [questionPreview]
   }));
-
-  // ---- Típus-specifikus UI helpers ----
   function addOptionRow() {
     optionRows.push({ logicalId: String(optionRows.length + 1), text: '', isCorrect: false });
   }
@@ -221,11 +177,8 @@
   function toggleMultiCorrect(index: number) { optionRows[index].isCorrect = !optionRows[index].isCorrect; }
   function addMatchRow() { matchRows.push({ left: '', right: '' }); }
   function removeMatchRow(index: number) { matchRows.splice(index, 1); }
-
-  // ---- Mentés ----
   let saveResult = $state<string | null>(null);
   let saving = $state(false);
-
   async function saveToBackend() {
     saveResult = null;
     saving = true;
@@ -239,20 +192,17 @@
         },
         question: questionPreview
       };
-
       if (editingQuestionId && editingQuestionFromServer) {
         payload.quizSetId = editingQuestionFromServer.question.quizSetId;
         payload.questionId = editingQuestionId;
       } else if (selectedQuizSetMode === 'existing' && selectedQuizSetId) {
         payload.quizSetId = selectedQuizSetId;
       }
-
       const res = await fetch('/kviz-keszito', {
         method: 'POST',
         headers: { 'content-type': 'application/json' },
         body: JSON.stringify(payload)
       });
-
       if (!res.ok) {
         const ct = res.headers.get('content-type') ?? '';
         let msg = '';
@@ -266,7 +216,6 @@
         saveResult = `Hiba: ${res.status} – ${msg}`;
         return;
       }
-
       const dataRes = await res.json();
       saveResult = `Siker: mód=${dataRes.mode ?? 'create'}; quizQuestionId=${dataRes.quizQuestionId}, quizSetId=${dataRes.quizSetId}`;
     } catch (err) {
@@ -276,20 +225,15 @@
     }
   }
 </script>
-
 <div class="max-w-4xl mx-auto p-4 space-y-6">
   <h1 class="text-2xl font-bold mb-2">Quiz kérdés szerkesztő</h1>
-
   {#if editingQuestionId}
     <p class="text-sm text-blue-700 mb-2">
       Szerkesztés módban vagy – kérdés ID: {editingQuestionId}
     </p>
   {/if}
-
-  <!-- QuizSet meta + mód választás -->
   <section class="border rounded-lg p-4 space-y-3">
     <h2 class="font-semibold text-lg">QuizSet meta</h2>
-
     <div class="space-y-2">
       <label class="flex items-center gap-2 text-sm">
         <input
@@ -314,7 +258,6 @@
         <span>Új QuizSet létrehozása (az alábbi meta alapján)</span>
       </label>
     </div>
-
     {#if selectedQuizSetMode === 'existing'}
       {#if quizSets.length === 0}
         <p class="text-sm text-gray-500">Nincs még egy QuizSet sem az adatbázisban.</p>
@@ -337,7 +280,6 @@
         </div>
       {/if}
     {/if}
-
     {#if selectedQuizSetMode === 'new' && !editingQuestionId}
       <div class="grid gap-3 md:grid-cols-3 mt-3">
         <div class="flex flex-col gap-1">
@@ -350,7 +292,6 @@
             oninput={(e) => (quizSetMeta.version = (e.target as HTMLInputElement).value)}
           />
         </div>
-
         <div class="flex flex-col gap-1 md:col-span-2">
           <label for="source" class="font-medium text-sm">Forrás (source)</label>
           <input
@@ -363,18 +304,14 @@
           />
         </div>
       </div>
-
       <div class="flex flex-col gap-1 w-32 mt-2">
         <label for="languageSelect" class="font-medium text-sm">Nyelv</label>
         <input id="languageSelect" class="border rounded px-2 py-1 bg-gray-100" type="text" value="hu" readonly />
       </div>
     {/if}
   </section>
-
-  <!-- Kérdés alapadatok -->
   <section class="border rounded-lg p-4 space-y-4">
     <h2 class="font-semibold text-lg">Kérdés adatai</h2>
-
     <div class="grid gap-3 md:grid-cols-3">
       <div class="flex flex-col gap-1">
         <label for="externalId" class="font-medium text-sm">Külső ID (pl. DP-1)</label>
@@ -386,7 +323,6 @@
           oninput={(e) => (currentQuestionBase.externalId = (e.target as HTMLInputElement).value)}
         />
       </div>
-
       <div class="flex flex-col gap-1 md:col-span-2">
         <label for="topic" class="font-medium text-sm">Téma (topic)</label>
         <input
@@ -398,7 +334,6 @@
         />
       </div>
     </div>
-
     <div class="grid gap-3 md:grid-cols-3">
       <div class="flex flex-col gap-1">
         <label for="type" class="font-medium text-sm">Típus</label>
@@ -419,7 +354,6 @@
           {/each}
         </select>
       </div>
-
       <div class="flex flex-col gap-1">
         <label for="difficulty" class="font-medium text-sm">Nehézség</label>
         <select
@@ -435,7 +369,6 @@
         </select>
       </div>
     </div>
-
     <div class="flex flex-col gap-1">
       <label for="prompt" class="font-medium text-sm">Kérdés szövege (prompt)</label>
       <textarea
@@ -445,7 +378,6 @@
         oninput={(e) => (currentQuestionBase.prompt = (e.target as HTMLTextAreaElement).value)}
       >{currentQuestionBase.prompt}</textarea>
     </div>
-
     <div class="flex flex-col gap-1">
       <label for="explanation" class="font-medium text-sm">Magyarázat (opcionális)</label>
       <textarea
@@ -456,11 +388,8 @@
       >{currentQuestionBase.explanation}</textarea>
     </div>
   </section>
-
-  <!-- Típus-specifikus rész -->
   <section class="border rounded-lg p-4 space-y-4">
     <h2 class="font-semibold text-lg">Típus-specifikus beállítások</h2>
-
     {#if currentQuestionBase.type === 'true_false'}
       <div class="flex gap-4">
         <label class="flex items-center gap-2">
@@ -482,7 +411,6 @@
           <span>Hamis</span>
         </label>
       </div>
-
     {:else if currentQuestionBase.type === 'single_choice' || currentQuestionBase.type === 'multiple_choice'}
       <div class="flex justify-between items-center">
         <h3 class="font-medium">
@@ -492,11 +420,9 @@
           + Opció hozzáadása
         </button>
       </div>
-
       {#if optionRows.length === 0}
         <p class="text-sm text-gray-500">Még nincs egy opció sem.</p>
       {/if}
-
       <div class="space-y-2">
         {#each optionRows as opt, index}
           <div class="flex items-center gap-2">
@@ -516,7 +442,6 @@
               value={opt.text}
               oninput={(e) => (opt.text = (e.target as HTMLInputElement).value)}
             />
-
             {#if currentQuestionBase.type === 'single_choice'}
               <label class="flex items-center gap-1 text-sm">
                 <input
@@ -537,7 +462,6 @@
                 Helyes
               </label>
             {/if}
-
             <button
               type="button"
               class="text-xs border rounded px-2 py-1"
@@ -548,7 +472,6 @@
           </div>
         {/each}
       </div>
-
     {:else if currentQuestionBase.type === 'match_pairs'}
       <div class="flex justify-between items-center">
         <h3 class="font-medium">Összepárosítás (bal ↔ jobb)</h3>
@@ -556,11 +479,9 @@
           + Pár hozzáadása
         </button>
       </div>
-
       {#if matchRows.length === 0}
         <p class="text-sm text-gray-500">Még nincs egy pár sem.</p>
       {/if}
-
       <div class="space-y-2">
         {#each matchRows as row, index}
           <div class="grid grid-cols-2 gap-2 items-center">
@@ -592,18 +513,14 @@
       </div>
     {/if}
   </section>
-
-  <!-- JSON preview + mentés -->
   <section class="border rounded-lg p-4 space-y-3">
     <h2 class="font-semibold text-lg">JSON preview</h2>
     <p class="text-sm text-gray-600">
       Ez a JSON kompatibilis a <code>QuizSet</code>/<code>QuizQuestion</code> típusaiddal és a sémával.
     </p>
-
     <pre class="bg-gray-950 text-gray-100 text-xs p-3 rounded overflow-x-auto">
 {JSON.stringify(quizSetPreview, null, 2)}
     </pre>
-
     <div class="flex items-center gap-3">
       <button
         type="button"

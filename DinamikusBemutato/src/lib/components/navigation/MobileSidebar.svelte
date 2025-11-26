@@ -2,29 +2,20 @@
   import Sidebar from '$lib/components/navigation/Sidebar.svelte';
   import { sidebarVisible, useOverlaySidebar, prefersReducedMotion, closeSidebar } from '$lib/stores/ui';
   import { onMount } from 'svelte';
-
   let dialogEl: HTMLDivElement | null = null;
-
-  // Focus management + Esc support
   onMount(() => {
     const onKey = (e: KeyboardEvent) => (e.key === 'Escape' ? closeSidebar() : null);
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
   });
-
-  // When opening, move focus into the dialog for a11y
   $: if ($useOverlaySidebar && $sidebarVisible && dialogEl) {
-    // microtask to ensure it's rendered
     queueMicrotask(() => dialogEl?.focus());
   }
-
   function handleKeydown(e: KeyboardEvent) {
     if (e.key === 'Escape') closeSidebar();
   }
 </script>
-
 {#if $useOverlaySidebar}
-  <!-- Backdrop as keyboard-accessible button -->
   <button
     type="button"
     class="fixed inset-0 z-40 md:hidden bg-black/40 transition-opacity"
@@ -35,8 +26,6 @@
     aria-hidden={!$sidebarVisible}
     on:click={closeSidebar}
   ></button>
-
-  <!-- Dialog container: focusable + keyboard handler -->
   <div
     id="app-sidebar"
     role="dialog"

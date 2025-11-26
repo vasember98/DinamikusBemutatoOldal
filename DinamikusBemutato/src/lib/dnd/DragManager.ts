@@ -1,17 +1,13 @@
-// src/lib/dnd/DragManager.ts
 import { writable, get } from 'svelte/store';
-
 export type NodeId = string;
 export type Point = { x: number; y: number };
 export type Rect = { left: number; top: number; width: number; height: number };
-
 const toRect = (r: DOMRect): Rect => ({
   left: r.left,
   top: r.top,
   width: r.width,
   height: r.height
 });
-
 export interface DragState {
   sourceId: NodeId;
   sourceLabel?: string;
@@ -22,7 +18,6 @@ export interface DragState {
   overLabel?: string;
   overRect?: DOMRect;
 }
-
 type DroppableReg = {
   id: NodeId;
   el: HTMLElement;
@@ -31,11 +26,8 @@ type DroppableReg = {
   label?: string;
   accepts?: (d: DragState) => boolean;
 };
-
 const droppables = new Map<NodeId, DroppableReg>();
-
 export const drag = writable<DragState | null>(null);
-
 export function registerDroppable(args: {
   id: NodeId;
   el: HTMLElement;
@@ -55,19 +47,16 @@ export function registerDroppable(args: {
   droppables.set(args.id, reg);
   return () => droppables.delete(args.id);
 }
-
 export function getDroppableLabel(id?: string) {
   if (!id) return undefined;
   return droppables.get(id)?.label ?? id;
 }
-
 function pickOver(pointer: Point, state?: DragState) {
   const s = state ?? get(drag);
   let overId: string | undefined;
   let overRect: DOMRect | undefined;
   let overLabel: string | undefined;
   let smallestArea = Infinity;
-
   droppables.forEach((d) => {
     if (!d.enabled) return;
     const rect = d.getRect();
@@ -77,9 +66,7 @@ function pickOver(pointer: Point, state?: DragState) {
       pointer.y >= rect.top &&
       pointer.y <= rect.top + rect.height;
     if (!inside) return;
-
     if (d.accepts && s && !d.accepts(s)) return;
-
     const area = rect.width * rect.height;
     if (area < smallestArea) {
       smallestArea = area;
@@ -88,10 +75,8 @@ function pickOver(pointer: Point, state?: DragState) {
       overLabel = d.label ?? d.id;
     }
   });
-
   return { overId, overRect, overLabel };
 }
-
 export function startDrag(
   sourceId: NodeId,
   startRect: DOMRect,
@@ -99,7 +84,6 @@ export function startDrag(
   sourceLabel?: string
 ) {
   const offset = { x: pointer.x - startRect.left, y: pointer.y - startRect.top };
-  // Provisional state used for accepts during initial hit test
   const provisional: DragState = {
     sourceId,
     sourceLabel,
@@ -110,12 +94,10 @@ export function startDrag(
   const { overId, overRect, overLabel } = pickOver(pointer, provisional);
   drag.set({ ...provisional, overId, overRect, overLabel });
 }
-
 let raf = 0;
 export function moveDrag(pointer: Point) {
   const cur = get(drag);
   if (!cur) return;
-
   if (raf) cancelAnimationFrame(raf);
   raf = requestAnimationFrame(() => {
     const { overId, overRect, overLabel } = pickOver(pointer, { ...cur, pointer });
@@ -130,7 +112,6 @@ export function moveDrag(pointer: Point) {
     drag.set({ ...cur, pointer, overId, overRect, overLabel });
   });
 }
-
 export function endDrag() {
   const cur = get(drag);
   drag.set(null);
@@ -150,7 +131,6 @@ export function endDrag() {
     );
   }
 }
-
 export function cancelDrag() {
   drag.set(null);
 }

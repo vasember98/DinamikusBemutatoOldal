@@ -5,9 +5,8 @@ brief?: string;
 onRunChecks?: () => void;
 }>();
 </script>
-
 <div class="w-full">
-  <div class="px-0 py-3 flex items-center gap-3">  <!-- removed mx-auto/max-w-7xl -->
+  <div class="px-0 py-3 flex items-center gap-3">  
     <div class="flex-1 min-w-0">
       <h1 class="text-lg font-semibold truncate">{title}</h1>
       <p class="text-sm text-neutral-600 dark:text-neutral-400 whitespace-normal break-words leading-relaxed">

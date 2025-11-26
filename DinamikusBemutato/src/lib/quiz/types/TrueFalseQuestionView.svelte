@@ -1,8 +1,6 @@
 <script lang="ts">
   import type { TrueFalseQuestion } from '../model';
-
   type Status = 'unanswered' | 'correct' | 'wrong';
-
   const { question, value, status, revealCorrection, onanswer } = $props<{
     question: TrueFalseQuestion;
     value: boolean | undefined;
@@ -10,16 +8,13 @@
     revealCorrection: boolean;
     onanswer: (val: boolean) => void;
   }>();
-
   function choose(val: boolean) {
     onanswer(val);
   }
-
   function btnClass(expected: boolean) {
     if (!revealCorrection || status === 'unanswered') {
       return value === expected ? 'selected' : '';
     }
-    // mutatjuk a helyeset/rosszat
     if (expected === question.correct) {
       return 'correct';
     }
@@ -29,7 +24,6 @@
     return '';
   }
 </script>
-
 <div class="tf">
   <button
     type="button"
@@ -46,7 +40,6 @@
     Hamis
   </button>
 </div>
-
 <style>
   .tf {
     display: flex;

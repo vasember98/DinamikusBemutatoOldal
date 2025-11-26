@@ -1,13 +1,8 @@
 <script lang="ts">
   import type { PageData } from './$types';
-
   const { data } = $props<{ data: PageData }>();
-
   type QuestionRow = (typeof data.questions)[number];
-
   const questions = data.questions as QuestionRow[];
-
-  // egyszerű helper a típus fordítására
   function formatType(t: string): string {
     switch (t) {
       case 'single_choice':
@@ -22,7 +17,6 @@
         return t;
     }
   }
-
   function formatDifficulty(d: string | null): string {
     if (!d) return '';
     if (d === 'easy') return 'Könnyű';
@@ -30,7 +24,6 @@
     if (d === 'hard') return 'Nehéz';
     return d;
   }
-
   function formatDate(d: Date | string | null): string {
     if (!d) return '';
     const date = typeof d === 'string' ? new Date(d) : d;
@@ -38,11 +31,9 @@
     return date.toLocaleString('hu-HU');
   }
 </script>
-
 <div class="max-w-5xl mx-auto p-4 space-y-6">
   <div class="flex items-center justify-between gap-4">
     <h1 class="text-2xl font-bold">Kvíz kérdések</h1>
-
     <a
       href="/kviz-keszito"
       class="border rounded px-4 py-2 text-sm font-medium hover:bg-gray-100"
@@ -50,7 +41,6 @@
       + Új kérdés létrehozása
     </a>
   </div>
-
   {#if questions.length === 0}
     <p class="text-sm text-gray-600">
       Még nincs egy kérdés sem az adatbázisban.

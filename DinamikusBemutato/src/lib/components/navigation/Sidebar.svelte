@@ -5,12 +5,8 @@
   import { computeActiveSets } from '$lib/stores/activeRoute';
   import SidebarItem from './SidebarItem.svelte';
   import type { SidebarNode } from '$lib/types/sidebar';
-
   let { nodes = null } = $props<{ nodes?: SidebarNode[] | null }>();
-
-  // ✅ derived values
   let renderNodes = $derived(nodes ?? $menuNodes);
-
   function collectCollapsibleIds(list: SidebarNode[] | undefined, acc: Set<string>) {
     if (!list) return;
     for (const n of list) {
@@ -20,19 +16,14 @@
       if (hasChildren) collectCollapsibleIds(n.children, acc);
     }
   }
-
   function getAllCollapsibleIds(list?: SidebarNode[]): string[] {
   const s = new Set<string>();
   collectCollapsibleIds(list, s);
   return [...s];
 }
-
 let allCollapsibleIds = $derived(getAllCollapsibleIds(renderNodes));
-
   const expandAll = () => expanded.setMany(allCollapsibleIds, true);
   const collapseAll = () => expanded.setMany(allCollapsibleIds, false);
-
-  // ✅ side-effect: runs when renderNodes or page.url change
   $effect(() => {
     const { ancestors } = computeActiveSets(renderNodes ?? [], page.url);
     const toOpen = allCollapsibleIds.filter((id) => ancestors.has(id));
@@ -40,9 +31,6 @@ let allCollapsibleIds = $derived(getAllCollapsibleIds(renderNodes));
     if (toOpen.length) expanded.setMany(toOpen, true);
   });
 </script>
-
-
-<!-- PURE CONTENT: no fixed/sticky/z/translate here -->
 <div class="w-full p-3">
   <div class="mb-3 flex items-center gap-2">
     <button class="rounded-md px-2 py-1 text-xs hover:bg-neutral-100 dark:hover:bg-neutral-800 focus:outline-none focus:ring-2"
@@ -54,7 +42,6 @@ let allCollapsibleIds = $derived(getAllCollapsibleIds(renderNodes));
       Collapse all
     </button>
   </div>
-
   {#if renderNodes?.length}
     <nav aria-label="Main navigation">
       <ul role="tree" aria-multiselectable="false" class="m-0 list-none space-y-1 p-0">

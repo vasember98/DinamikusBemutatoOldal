@@ -1,22 +1,18 @@
 <script lang="ts">
   type NotificationType = 'system' | 'comment' | 'mention' | 'warning';
-
   interface Notification {
     id: string;
     title: string;
     body: string;
     type: NotificationType;
     isRead: boolean;
-    createdAt: string; // ISO
+    createdAt: string;
   }
-
   export let notification: Notification;
   export let onToggleRead: (id: string) => void;
-
   function handleToggle() {
     onToggleRead && onToggleRead(notification.id);
   }
-
   function formatTime(iso: string): string {
     const d = new Date(iso);
     return d.toLocaleString(undefined, {
@@ -26,7 +22,6 @@
       month: 'short'
     });
   }
-
   function typeLabel(type: NotificationType): string {
     if (type === 'system') return 'System';
     if (type === 'comment') return 'Comment';
@@ -35,7 +30,6 @@
     return 'Update';
   }
 </script>
-
 <li
   class={`group flex items-start gap-3 rounded-xl border px-3 py-3 text-xs transition ${
     notification.isRead
@@ -48,7 +42,6 @@
       notification.isRead ? 'bg-slate-600' : 'bg-emerald-400'
     }`}
   ></div>
-
   <div class="flex-1 space-y-1">
     <div class="flex items-center justify-between gap-3">
       <div class="flex items-center gap-2">
@@ -73,11 +66,9 @@
         {formatTime(notification.createdAt)}
       </span>
     </div>
-
     <p class="text-[10px] leading-snug text-slate-300">
       {notification.body}
     </p>
-
     <button
       type="button"
       class="mt-1 text-[9px] text-emerald-400 hover:text-emerald-300 underline-offset-2 hover:underline"

@@ -1,11 +1,9 @@
 <script lang="ts">
   import { drag } from '$lib/dnd/DragManager';
   import type { DragState } from '$lib/dnd/DragManager';
-
   let state: DragState | null = null;
   const unsub = drag.subscribe((d) => (state = d));
   export let showTarget = true;
-
   $: ghostStyle = state
     ? `
       position: fixed;
@@ -20,7 +18,6 @@
       opacity:.8;
     `
     : '';
-
   $: targetStyle = state?.overRect
     ? `
       position: fixed;
@@ -35,7 +32,6 @@
     `
     : '';
 </script>
-
 {#if state}
   <div class="fixed inset-0 pointer-events-none z-[9999]" aria-hidden="true">
     <div style={ghostStyle} class="drag-ghost"></div>
@@ -43,8 +39,6 @@
       <div style={targetStyle} class="drag-target"></div>
     {/if}
   </div>
-
-  <!-- Screen reader announcements -->
   <div class="sr-only" aria-live="polite">
     {#if !state.overId}
       Picked up {state.sourceLabel ?? state.sourceId}. Use arrow keys to move. Press Space or Enter to drop. Press Escape to cancel.
@@ -53,7 +47,6 @@
     {/if}
   </div>
 {/if}
-
 <style>
   :global(html.app-dragging) {
     -webkit-user-select: none;

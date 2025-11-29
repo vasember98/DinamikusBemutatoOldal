@@ -3,25 +3,61 @@
   import { Quiz } from './model';
   import { BaseQuestion } from './model';
   import QuestionRenderer from './QuestionRenderer.svelte';
-  const { quiz } = $props<{ quiz: Quiz }>();
+  const { quiz: fullQuiz } = $props<{ quiz: Quiz }>();
   type Status = 'unanswered' | 'correct' | 'wrong';
+  let quizStarted = $state(false);
+  let selectedCount = $state<number | 'all'>('all');
+  let quiz = $state(fullQuiz);
   let currentIndex = $state(0);
   let userAnswers = $state<Map<string | number, unknown>>(new Map());
   let answerStatus = $state<Map<string | number, Status>>(new Map());
   let showResults = $state(false);
   let examMode = $state(false);
   let elapsedMs = $state(0);
-  onMount(() => {
+  let timerInterval: ReturnType<typeof setInterval> | null = null;
+  
+  function startQuiz() {
+    if (selectedCount === 'all') {
+      quiz = fullQuiz;
+    } else {
+      const shuffled = [...fullQuiz.questions].sort(() => Math.random() - 0.5);
+      const selected = shuffled.slice(0, selectedCount);
+      quiz = new Quiz({
+        version: fullQuiz.version,
+        language: fullQuiz.language,
+        source: fullQuiz.source,
+        questions: selected.map(q => ({
+          id: q.id,
+          topic: q.topic,
+          type: q.type,
+          prompt: q.prompt,
+          explanation: q.explanation,
+          difficulty: q.difficulty,
+          answer: (q as any).correct ?? (q as any).correctId ?? (q as any).correctIds ?? (q as any).solution,
+          options: (q as any).options,
+          pairs: (q as any).pairs
+        }))
+      });
+    }
+    
     const init = new Map<string | number, Status>();
     for (const q of quiz.questions) {
       init.set(q.id, 'unanswered');
     }
     answerStatus = init;
+    
     const start = Date.now();
-    const timer = setInterval(() => {
+    timerInterval = setInterval(() => {
       elapsedMs = Date.now() - start;
     }, 1000);
-    return () => clearInterval(timer);
+    
+    quizStarted = true;
+  }
+  
+  onMount(() => {
+    return () => {
+      if (timerInterval) clearInterval(timerInterval);
+    };
   });
   const elapsedSeconds = $derived(Math.floor(elapsedMs / 1000));
   const elapsedFormatted = $derived(formatTime(elapsedSeconds));
@@ -69,6 +105,41 @@
     return `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
   }
 </script>
+
+{#if !quizStarted}
+  <div class="start-screen">
+    <div class="start-card">
+      <h1>Kvíz indítása</h1>
+      <p>Válaszd ki, hány kérdésből álljon a kvíz:</p>
+      <div class="options">
+        <button 
+          class="option-btn" 
+          class:selected={selectedCount === 10}
+          onclick={() => selectedCount = 10}
+        >
+          10 kérdés
+        </button>
+        <button 
+          class="option-btn" 
+          class:selected={selectedCount === 20}
+          onclick={() => selectedCount = 20}
+        >
+          20 kérdés
+        </button>
+        <button 
+          class="option-btn" 
+          class:selected={selectedCount === 'all'}
+          onclick={() => selectedCount = 'all'}
+        >
+          Összes ({fullQuiz.length} kérdés)
+        </button>
+      </div>
+      <button class="start-btn" onclick={startQuiz}>
+        Kvíz indítása
+      </button>
+    </div>
+  </div>
+{:else}
 <div class="quiz-layout">
   <div class="quiz-main">
     <div class="progress-bar">
@@ -99,12 +170,27 @@
       </div>
     {:else}
       {@const result = calcScore()}
+      {@const wrongQuestions = quiz.questions.filter((q: BaseQuestion) => answerStatus.get(q.id) === 'wrong')}
       <div class="results-card">
         <h2>Eredmény</h2>
         <p><strong>{result.score}</strong> / {result.total} helyes válasz</p>
         <p>Idő: {elapsedFormatted}</p>
         {#if examMode}
           <p>Vizsga mód: a jelölések most láthatók.</p>
+          {#if wrongQuestions.length > 0}
+            <div class="wrong-list">
+              <h3>Hibás válaszok ({wrongQuestions.length} db):</h3>
+              <ul>
+                {#each wrongQuestions as wq, idx}
+                  <li>
+                    <strong>#{idx + 1}:</strong> {wq.prompt.substring(0, 80)}{wq.prompt.length > 80 ? '...' : ''}
+                  </li>
+                {/each}
+              </ul>
+            </div>
+          {:else}
+            <p class="perfect">Minden válasz helyes! 🎉</p>
+          {/if}
         {:else}
           <p>Tanuló mód: minden kérdésnél azonnali visszajelzés volt.</p>
         {/if}
@@ -116,10 +202,12 @@
       <div class="label">Kérdés</div>
       <div class="value">{currentIndex + 1} / {quiz.length}</div>
     </div>
-    <div class="sidebar-card">
-      <div class="label">Helyes válaszok</div>
-      <div class="value good">{correctCount}</div>
-    </div>
+    {#if !examMode || showResults}
+      <div class="sidebar-card">
+        <div class="label">Helyes válaszok</div>
+        <div class="value good">{correctCount}</div>
+      </div>
+    {/if}
     <div class="sidebar-card">
       <div class="label">Megválaszolt</div>
       <div class="value">{answeredCount}</div>
@@ -145,7 +233,69 @@
     </div>
   </aside>
 </div>
+{/if}
 <style>
+  .start-screen {
+    max-width: 600px;
+    margin: 4rem auto;
+    padding: 1.5rem;
+  }
+  .start-card {
+    padding: 2rem;
+    border-radius: 1rem;
+    border: 1px solid #e5e7eb;
+    background: #ffffff;
+    box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+    text-align: center;
+  }
+  .start-card h1 {
+    margin: 0 0 1rem 0;
+    font-size: 1.75rem;
+    color: #1f2937;
+  }
+  .start-card p {
+    margin: 0 0 1.5rem 0;
+    color: #6b7280;
+  }
+  .options {
+    display: flex;
+    gap: 0.75rem;
+    margin-bottom: 1.5rem;
+    justify-content: center;
+  }
+  .option-btn {
+    padding: 0.75rem 1.25rem;
+    border-radius: 0.5rem;
+    border: 2px solid #e5e7eb;
+    background: #f9fafb;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: 500;
+    transition: all 0.2s;
+  }
+  .option-btn:hover {
+    border-color: #3b82f6;
+    background: #eff6ff;
+  }
+  .option-btn.selected {
+    border-color: #3b82f6;
+    background: #3b82f6;
+    color: white;
+  }
+  .start-btn {
+    padding: 0.875rem 2rem;
+    border-radius: 0.5rem;
+    border: none;
+    background: #10b981;
+    color: white;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  .start-btn:hover {
+    background: #059669;
+  }
   .quiz-layout {
     max-width: 1100px;
     margin: 2rem auto;
@@ -239,5 +389,36 @@
     background: #f9fafb;
     display: grid;
     gap: 0.4rem;
+  }
+  .wrong-list {
+    margin-top: 1rem;
+    padding: 1rem;
+    background: #fef2f2;
+    border: 1px solid #fecaca;
+    border-radius: 0.5rem;
+  }
+  .wrong-list h3 {
+    margin: 0 0 0.75rem 0;
+    font-size: 1rem;
+    color: #991b1b;
+  }
+  .wrong-list ul {
+    margin: 0;
+    padding-left: 1.25rem;
+    list-style: none;
+  }
+  .wrong-list li {
+    margin-bottom: 0.5rem;
+    color: #7f1d1d;
+    font-size: 0.9rem;
+    line-height: 1.4;
+  }
+  .wrong-list li strong {
+    color: #991b1b;
+  }
+  .perfect {
+    color: #22c55e;
+    font-weight: 600;
+    margin-top: 0.5rem;
   }
 </style>

@@ -1,7 +1,7 @@
 {
     "$schema": "../jsonSchemas/menu.schema.json",
     "menu": [
-        ["/", "Main page"],
+        ["/", "Főoldal"],
         [null, "demos", [
             ["/notifications", "értesítések" ],
             ["/dnd-demo", "drag and drop"]
